@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" style="-fx-padding: 20;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="mapademo.ActividadesViewController">
+
+    <Label text="Actividades" style="-fx-font-size: 22px;" />
+
+    <Button text="Importar GPX" onAction="#importarGPX" />
+
+    <TableView>
+        <columns>
+            <TableColumn text="Nombre" />
+            <TableColumn text="Fecha" />
+            <TableColumn text="Distancia" />
+            <TableColumn text="Duración" />
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Button text="Visualizar" />
+        <Button text="Renombrar" />
+        <Button text="Borrar" />
+    </HBox>
+
+</VBox>
