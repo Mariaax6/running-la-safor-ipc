@@ -23,7 +23,7 @@ public class MapaDemoApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
         Scene scene = new Scene(root);
-        stage.setTitle("Demo mapas - IPC");
+        stage.setTitle("Running la Safor");
         stage.setScene(scene);
         stage.show();
     }
