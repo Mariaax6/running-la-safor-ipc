@@ -1,11 +1,14 @@
 package mapademo;
 
 import java.io.File;
+import java.util.Optional;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
+import javafx.scene.control.Alert;
 
 public class ActividadesViewController {
 
@@ -35,18 +38,53 @@ public class ActividadesViewController {
 
         if (archivo != null) {
             tablaActividades.getItems().add(
-                new ActividadFila(archivo.getName(), "Pendiente", "Pendiente", "Pendiente")
+                new ActividadFila(archivo.getName(), "04/05/2026", "5 km", "30 min")
             );
         }
     }
+
     @FXML
     private void borrarActividad() {
         ActividadFila seleccionada = tablaActividades.getSelectionModel().getSelectedItem();
 
         if (seleccionada != null) {
             tablaActividades.getItems().remove(seleccionada);
-        } else {
-            System.out.println("No hay ninguna actividad seleccionada");
+        }
+    }
+
+    @FXML
+    private void renombrarActividad() {
+        ActividadFila seleccionada = tablaActividades.getSelectionModel().getSelectedItem();
+
+        if (seleccionada != null) {
+            TextInputDialog dialog = new TextInputDialog(seleccionada.getNombre());
+            dialog.setTitle("Renombrar actividad");
+            dialog.setHeaderText("Nuevo nombre de la actividad");
+            dialog.setContentText("Nombre:");
+
+            Optional<String> resultado = dialog.showAndWait();
+
+            if (resultado.isPresent()) {
+                seleccionada.setNombre(resultado.get());
+                tablaActividades.refresh();
+            }
+        }
+    }
+    @FXML
+    private void visualizarActividad() {
+        ActividadFila seleccionada = tablaActividades.getSelectionModel().getSelectedItem();
+
+        if (seleccionada != null) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Visualizar actividad");
+            alert.setHeaderText("Actividad seleccionada");
+            alert.setContentText(
+                "Nombre: " + seleccionada.getNombre() + "\n" +
+                "Fecha: " + seleccionada.getFecha() + "\n" +
+                "Distancia: " + seleccionada.getDistancia() + "\n" +
+                "Duración: " + seleccionada.getDuracion()
+            );
+            alert.showAndWait();
         }
     }
 }
