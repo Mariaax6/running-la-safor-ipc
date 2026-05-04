@@ -39,4 +39,14 @@ public class ActividadesViewController {
             );
         }
     }
+    @FXML
+    private void borrarActividad() {
+        ActividadFila seleccionada = tablaActividades.getSelectionModel().getSelectedItem();
+
+        if (seleccionada != null) {
+            tablaActividades.getItems().remove(seleccionada);
+        } else {
+            System.out.println("No hay ninguna actividad seleccionada");
+        }
+    }
 }
