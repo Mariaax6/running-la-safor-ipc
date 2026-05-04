@@ -22,7 +22,7 @@ public class MapaDemoApp extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("LoginView.fxml"));
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/logo.png")));
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Running la Safor");
         stage.setScene(scene);
         stage.show();

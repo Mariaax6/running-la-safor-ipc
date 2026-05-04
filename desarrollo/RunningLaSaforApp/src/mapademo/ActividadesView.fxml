@@ -11,19 +11,19 @@
 
     <Button text="Importar GPX" onAction="#importarGPX" />
 
-    <TableView>
-        <columns>
-            <TableColumn text="Nombre" />
-            <TableColumn text="Fecha" />
-            <TableColumn text="Distancia" />
-            <TableColumn text="Duración" />
-        </columns>
-    </TableView>
+    <TableView fx:id="tablaActividades">
+    <columns>
+        <TableColumn fx:id="colNombre" text="Nombre" />
+        <TableColumn fx:id="colFecha" text="Fecha" />
+        <TableColumn fx:id="colDistancia" text="Distancia" />
+        <TableColumn fx:id="colDuracion" text="Duración" />
+    </columns>
+</TableView>
 
     <HBox spacing="10">
-        <Button text="Visualizar" />
-        <Button text="Renombrar" />
-        <Button text="Borrar" />
+        <Button text="Visualizar" onAction="#visualizarActividad" />
+        <Button text="Renombrar" onAction="#renombrarActividad" />
+        <Button text="Borrar" onAction="#borrarActividad" />
     </HBox>
 
 </VBox>
