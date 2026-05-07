@@ -2,7 +2,7 @@
 
 ## 1. Introducción
 
-Este documento recoge el diseño conceptual de la aplicación Running la Safor, desarrollada para la asignatura Interfaces Persona Computador.
+Este documento recoge el diseño conceptual de la aplicación Running la Safor.
 
 La aplicación permitirá a los socios del club registrar actividades deportivas al aire libre mediante ficheros GPX, visualizar el trazado sobre un mapa, consultar estadísticas, añadir anotaciones y revisar su historial de uso.
 
@@ -72,44 +72,3 @@ Los objetos de tarea son aquellos elementos principales con los que interactúa 
 | Anotación | Marca creada por el usuario sobre una ruta | tipo, texto, color, grosor, posición geográfica | crear, visualizar, modificar color, borrar |
 | Perfil de desnivel | Representación gráfica de la altitud de la actividad | distancia, altitud | consultar, relacionar con el mapa |
 | Velocidad sobre trazado | Representación visual de la velocidad en diferentes tramos | tramo, velocidad | activar o desactivar visualización |
-
----
-
-## 4. Relaciones entre objetos
-
-Las relaciones principales entre los objetos de tarea son:
-
-```text
-Usuario
- ├── tiene muchas Actividades
- ├── tiene muchas Sesiones
- └── tiene un Avatar
-
-Actividad
- ├── pertenece a un Usuario
- ├── contiene una Ruta
- ├── tiene Estadísticas
- ├── tiene Anotaciones
- └── se representa sobre un Mapa
-
-Ruta
- ├── tiene Punto inicial
- ├── tiene Punto final
- └── está formada por puntos GPS
-
-Anotación
- ├── pertenece a una Actividad
- ├── tiene un Tipo
- ├── tiene Texto
- ├── tiene Color
- └── tiene una o varias posiciones geográficas
-
-Mapa
- ├── tiene una Imagen
- ├── tiene un Bounding Box
- └── puede cubrir una Actividad
-
-Sesión
- ├── pertenece a un Usuario
- ├── tiene duración
- └── registra estadísticas de uso
