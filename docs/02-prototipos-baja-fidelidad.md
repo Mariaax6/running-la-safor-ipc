@@ -4,8 +4,6 @@
 
 Este documento recoge los prototipos de baja fidelidad de la aplicación Running la Safor.
 
-Los prototipos representan la estructura básica de las pantallas principales antes de implementar la interfaz definitiva. Su objetivo es validar la navegación, la distribución de la información y las acciones principales del usuario.
-
 ---
 
 ## 2. Pantalla de inicio de sesión
@@ -26,16 +24,6 @@ Los prototipos representan la estructura básica de las pantallas principales an
 | ¿No tienes cuenta? [ Registrarse ]             |
 |                                                |
 +------------------------------------------------+
-```
-
-Acciones principales:
-
-- Introducir nickname.
-- Introducir contraseña.
-- Iniciar sesión.
-- Acceder al registro.
-
----
 
 ## 3. Pantalla de registro
 
@@ -60,18 +48,6 @@ Acciones principales:
 |                                                |
 | [ Registrarse ]        [ Volver ]              |
 +------------------------------------------------+
-```
-
-Acciones principales:
-
-- Introducir nickname.
-- Introducir email.
-- Introducir contraseña.
-- Indicar fecha de nacimiento.
-- Seleccionar avatar opcional.
-- Confirmar registro.
-
----
 
 ## 4. Pantalla principal
 
@@ -86,18 +62,6 @@ Acciones principales:
 | Perfil               |                                       |
 | Cerrar sesión        |                                       |
 +----------------------+---------------------------------------+
-```
-
-Acciones principales:
-
-- Acceder a actividades.
-- Importar una nueva actividad.
-- Consultar historial.
-- Gestionar mapas.
-- Modificar perfil.
-- Cerrar sesión.
-
----
 
 ## 5. Pantalla de actividades
 
@@ -116,18 +80,6 @@ Acciones principales:
 | Acumulado mensual:                                           |
 | Distancia total: __ km | Tiempo total: __ | Desnivel: __ m    |
 +--------------------------------------------------------------+
-```
-
-Acciones principales:
-
-- Ver actividades importadas.
-- Importar fichero GPX.
-- Visualizar una actividad.
-- Renombrar una actividad.
-- Borrar una actividad.
-- Consultar acumulado mensual.
-
----
 
 ## 6. Pantalla de visualización de actividad
 
@@ -153,19 +105,6 @@ Acciones principales:
 |       gráfica distancia / altitud                                  |
 |                                                                    |
 +--------------------------------------------------------------------+
-```
-
-Acciones principales:
-
-- Ver ruta sobre el mapa.
-- Hacer zoom.
-- Consultar estadísticas.
-- Ver inicio y final de la ruta.
-- Añadir anotaciones.
-- Ver perfil de desnivel.
-- Activar visualización de velocidad sobre el trazado.
-
----
 
 ## 7. Pantalla de añadir anotación
 
@@ -187,17 +126,6 @@ Acciones principales:
 |                                                |
 | [ Guardar ]                 [ Cancelar ]       |
 +------------------------------------------------+
-```
-
-Acciones principales:
-
-- Seleccionar tipo de anotación.
-- Escribir texto.
-- Seleccionar color.
-- Indicar grosor.
-- Guardar o cancelar la anotación.
-
----
 
 ## 8. Pantalla de historial de sesiones
 
@@ -216,18 +144,6 @@ Acciones principales:
 | Actividades visualizadas: __                                   |
 | Anotaciones creadas: __                                        |
 +----------------------------------------------------------------+
-```
-
-Acciones principales:
-
-- Consultar sesiones anteriores.
-- Ver duración de cada sesión.
-- Ver actividades importadas.
-- Ver actividades visualizadas.
-- Ver anotaciones creadas.
-- Consultar totales acumulados.
-
----
 
 ## 9. Pantalla de gestión de mapas
 
@@ -256,17 +172,6 @@ Acciones principales:
 |                                                              |
 | [ Guardar mapa ]                                             |
 +--------------------------------------------------------------+
-```
-
-Acciones principales:
-
-- Consultar mapas disponibles.
-- Añadir un nuevo mapa.
-- Seleccionar imagen JPG.
-- Introducir coordenadas del bounding box.
-- Guardar mapa.
-
----
 
 ## 10. Pantalla de modificación de perfil
 
@@ -294,20 +199,3 @@ Acciones principales:
 |                                                |
 | [ Guardar cambios ]       [ Cancelar ]         |
 +------------------------------------------------+
-```
-
-Acciones principales:
-
-- Consultar datos actuales.
-- Modificar email.
-- Modificar contraseña.
-- Cambiar avatar.
-- Guardar cambios.
-
----
-
-## 11. Conclusión
-
-Estos prototipos de baja fidelidad permiten definir la estructura inicial de la interfaz antes de comenzar la implementación.
-
-Las pantallas propuestas cubren los escenarios principales del caso práctico: gestión de usuarios, importación y visualización de actividades, uso del mapa, creación de anotaciones, historial de sesiones, gestión de mapas y modificación del perfil.
