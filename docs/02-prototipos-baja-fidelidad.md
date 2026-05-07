@@ -6,7 +6,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 ```text
 ## Pantalla de inicio de sesión
 
-```text
 +------------------------------------------------+
 |                Running la Safor                |
 +------------------------------------------------+
@@ -25,7 +24,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de registro
 
-```text
 +------------------------------------------------+
 |                  Registro                      |
 +------------------------------------------------+
@@ -49,7 +47,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla principal
 
-```text
 +--------------------------------------------------------------+
 | Running la Safor                              Usuario / Avatar |
 +----------------------+---------------------------------------+
@@ -63,7 +60,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de actividades
 
-```text
 +--------------------------------------------------------------+
 | Actividades                                      [Importar]   |
 +--------------------------------------------------------------+
@@ -81,7 +77,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de visualización de actividad
 
-```text
 +--------------------------------------------------------------------+
 | Carrera Valencia                               [ Zoom + ] [ Zoom - ] |
 +--------------------------------------------+-----------------------+
@@ -106,7 +101,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de añadir anotación
 
-```text
 +------------------------------------------------+
 |              Añadir anotación                  |
 +------------------------------------------------+
@@ -127,7 +121,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de historial de sesiones
 
-```text
 +----------------------------------------------------------------+
 | Historial de sesiones                                          |
 +----------------------------------------------------------------+
@@ -145,7 +138,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de gestión de mapas
 
-```text
 +--------------------------------------------------------------+
 | Gestión de mapas                                             |
 +--------------------------------------------------------------+
@@ -173,7 +165,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 
 ## Pantalla de modificación de perfil
 
-```text
 +------------------------------------------------+
 |              Modificar perfil                  |
 +------------------------------------------------+
