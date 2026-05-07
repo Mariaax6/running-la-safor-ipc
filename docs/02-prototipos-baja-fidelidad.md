@@ -1,12 +1,10 @@
 # Prototipos de baja fidelidad - Running la Safor IPC
 
-## 1. Introducción
-
 Este documento recoge los prototipos de baja fidelidad de la aplicación Running la Safor.
 
 ---
-
-## 2. Pantalla de inicio de sesión
+```text
+## Pantalla de inicio de sesión
 
 ```text
 +------------------------------------------------+
@@ -25,7 +23,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 |                                                |
 +------------------------------------------------+
 
-## 3. Pantalla de registro
+## Pantalla de registro
 
 ```text
 +------------------------------------------------+
@@ -49,7 +47,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | [ Registrarse ]        [ Volver ]              |
 +------------------------------------------------+
 
-## 4. Pantalla principal
+## Pantalla principal
 
 ```text
 +--------------------------------------------------------------+
@@ -63,7 +61,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | Cerrar sesión        |                                       |
 +----------------------+---------------------------------------+
 
-## 5. Pantalla de actividades
+## Pantalla de actividades
 
 ```text
 +--------------------------------------------------------------+
@@ -81,7 +79,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | Distancia total: __ km | Tiempo total: __ | Desnivel: __ m    |
 +--------------------------------------------------------------+
 
-## 6. Pantalla de visualización de actividad
+## Pantalla de visualización de actividad
 
 ```text
 +--------------------------------------------------------------------+
@@ -106,7 +104,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 |                                                                    |
 +--------------------------------------------------------------------+
 
-## 7. Pantalla de añadir anotación
+## Pantalla de añadir anotación
 
 ```text
 +------------------------------------------------+
@@ -127,7 +125,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | [ Guardar ]                 [ Cancelar ]       |
 +------------------------------------------------+
 
-## 8. Pantalla de historial de sesiones
+## Pantalla de historial de sesiones
 
 ```text
 +----------------------------------------------------------------+
@@ -145,7 +143,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | Anotaciones creadas: __                                        |
 +----------------------------------------------------------------+
 
-## 9. Pantalla de gestión de mapas
+## Pantalla de gestión de mapas
 
 ```text
 +--------------------------------------------------------------+
@@ -173,7 +171,7 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | [ Guardar mapa ]                                             |
 +--------------------------------------------------------------+
 
-## 10. Pantalla de modificación de perfil
+## Pantalla de modificación de perfil
 
 ```text
 +------------------------------------------------+
