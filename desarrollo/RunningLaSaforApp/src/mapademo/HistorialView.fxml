@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="15" style="-fx-padding: 20;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="mapademo.HistorialViewController">
+
+    <Label text="Historial" style="-fx-font-size: 22px;" />
+
+    <TableView>
+        <columns>
+            <TableColumn text="Fecha" />
+            <TableColumn text="Duración" />
+            <TableColumn text="Actividades" />
+        </columns>
+    </TableView>
+
+    <Button fx:id="btnVolver" text="Volver" onAction="#volverMenu" />
+
+</VBox>

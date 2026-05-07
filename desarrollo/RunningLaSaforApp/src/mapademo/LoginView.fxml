@@ -9,6 +9,7 @@
 
     <Label text="Running la Safor" style="-fx-font-size: 24px;" />
 
+   <Button text="Registrarse" onAction="#abrirRegistro" />
     <TextField fx:id="nicknameField"
                promptText="Nickname"
                maxWidth="250" />

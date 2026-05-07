@@ -21,4 +21,9 @@ public class LoginViewController {
         Scene scene = nicknameField.getScene();
         scene.setRoot(root);
     }
+        @FXML
+    private void abrirRegistro() throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("RegistroView.fxml"));
+        nicknameField.getScene().setRoot(root);
+    }
 }
