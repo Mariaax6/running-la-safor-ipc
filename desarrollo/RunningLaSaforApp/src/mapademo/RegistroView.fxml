@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="12" alignment="CENTER" style="-fx-padding: 30;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="mapademo.RegistroViewController">
+
+    <Label text="Registro" style="-fx-font-size: 24px;" />
+
+    <TextField fx:id="nicknameField" promptText="Nickname" maxWidth="250" />
+    <TextField fx:id="emailField" promptText="Email" maxWidth="250" />
+    <PasswordField fx:id="passwordField" promptText="Contraseña" maxWidth="250" />
+    <DatePicker fx:id="fechaNacimientoPicker" maxWidth="250" />
+
+    <Button text="Registrarse" onAction="#registrarUsuario" />
+    <Button fx:id="btnVolver" text="Volver" onAction="#volverLogin" />
+
+</VBox>
