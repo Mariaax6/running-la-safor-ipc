@@ -3,18 +3,59 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox spacing="12" alignment="CENTER" style="-fx-padding: 30;"
+<VBox spacing="20" alignment="CENTER" style="-fx-padding: 30;"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="mapademo.RegistroViewController">
 
-    <Label text="Registro" style="-fx-font-size: 24px;" />
+    <Label text="Crear cuenta" style="-fx-font-size: 24px;" />
 
-    <TextField fx:id="nicknameField" promptText="Nickname" maxWidth="250" />
-    <TextField fx:id="emailField" promptText="Email" maxWidth="250" />
-    <PasswordField fx:id="passwordField" promptText="Contraseña" maxWidth="250" />
-    <DatePicker fx:id="fechaNacimientoPicker" maxWidth="250" />
+    <VBox spacing="8" maxWidth="350">
+        <Label text="Datos personales" style="-fx-font-weight: bold;" />
 
-    <Button text="Registrarse" onAction="#registrarUsuario" />
-    <Button fx:id="btnVolver" text="Volver" onAction="#volverLogin" />
+        <Label text="Nickname*" />
+        <TextField fx:id="nicknameField" promptText="ej: jpgarcia" />
+        <Label fx:id="nickError"
+               text="6-15 caracteres (letras, números, - o _)"
+               textFill="red"
+               wrapText="true"
+               visible="false"/>
+
+        <Label text="Email*" />
+        <TextField fx:id="emailField" promptText="ej: usuario@gmail.com" />
+        <Label fx:id="emailError"
+               text="usuario@dominio"
+               textFill="red"
+               wrapText="true"
+               visible="false"/>
+
+        <Label text="Contraseña*" />
+        <PasswordField fx:id="passwordField" promptText="ej: Pass123!" />
+        <Label fx:id="passError"
+               text="8-20 caracteres, con mayúscula, minúscula, número y símbolo"
+               textFill="red"
+               wrapText="true"
+               visible="false"/>
+
+        <Label text="Fecha de nacimiento*" />
+        <DatePicker fx:id="fechaNacimientoPicker" promptText="ej: 14/03/2005" />
+        <Label fx:id="fechaError"
+               text="Debes tener más de 12 años"
+               textFill="red"
+               wrapText="true"
+               visible="false"/>
+    </VBox>
+    
+    <Separator maxWidth="350" opacity="0.4"/>
+    
+    <VBox spacing="8" maxWidth="350">
+        <Label text="Avatar" style="-fx-font-weight: bold;" />
+        <Button text="Seleccionar imagen" onAction="#seleccionarAvatar" />
+        <Label fx:id="avatarLabel" text="Ningún archivo seleccionado" />
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+        <Button fx:id="btnRegistrar" text="Registrarse" onAction="#registrarUsuario" />
+        <Button fx:id="btnVolver" text="Cancelar" onAction="#volverLogin" />
+    </HBox>
 
 </VBox>
