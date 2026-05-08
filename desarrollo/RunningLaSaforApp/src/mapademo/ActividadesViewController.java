@@ -123,4 +123,36 @@ public class ActividadesViewController {
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+    @FXML
+private void verAcumulado() {
+    if (listaActividades.isEmpty()) {
+        mostrarError("No hay actividades.");
+        return;
+    }
+
+    double distanciaTotal = 0;
+    int duracionTotal = 0;
+
+    for (ActividadFila act : listaActividades) {
+        // Quitamos texto " km" y " min"
+        double distancia = Double.parseDouble(act.getDistancia().replace(" km", ""));
+        int duracion = Integer.parseInt(act.getDuracion().replace(" min", ""));
+
+        distanciaTotal += distancia;
+        duracionTotal += duracion;
+    }
+
+    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    alert.setTitle("Acumulado mensual");
+    alert.setHeaderText("Resumen de actividades");
+
+    alert.setContentText(
+        "Número de actividades: " + listaActividades.size() + "\n" +
+        "Distancia total: " + String.format("%.2f km", distanciaTotal) + "\n" +
+        "Tiempo total: " + duracionTotal + " min\n" +
+        "Tiempo total: " + (duracionTotal / 60) + " h"
+    );
+
+    alert.showAndWait();
+}
 }
