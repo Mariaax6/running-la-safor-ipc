@@ -51,6 +51,7 @@ public class ActividadesViewController {
 
             listaActividades.add(nueva);
             tablaActividades.getItems().add(nueva);
+            SesionApp.registrarImportacion();
         }
     }
 
@@ -78,6 +79,7 @@ public class ActividadesViewController {
             "Altitud mínima: 20 m\n" +
             "Altitud máxima: 140 m"
         );
+        SesionApp.registrarVisualizacion();
         alert.showAndWait();
     }
 
