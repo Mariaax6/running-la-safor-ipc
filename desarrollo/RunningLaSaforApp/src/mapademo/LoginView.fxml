@@ -2,23 +2,42 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<VBox spacing="15" alignment="CENTER" style="-fx-padding: 40;"
+<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="mapademo.LoginViewController">
 
-    <Label text="Running la Safor" style="-fx-font-size: 24px;" />
+    <!-- TÍTULO -->
+    <Label text="Iniciar sesión" style="-fx-font-size: 30px;" />
 
-   <Button text="Registrarse" onAction="#abrirRegistro" />
-    <TextField fx:id="nicknameField"
-               promptText="Nickname"
-               maxWidth="250" />
+    <!-- FORMULARIO -->
+    <VBox maxWidth="350" spacing="8">
 
-    <PasswordField fx:id="passwordField"
-                   promptText="Contraseña"
-                   maxWidth="250" />
+        <Label text="Acceso" style="-fx-font-weight: bold;">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Label>
 
-    <Button text="Iniciar sesión"
-            onAction="#handleLogin" />
+        <Label text="Nickname*" />
+        <TextField fx:id="nicknameField" promptText="ej: jpgarcia" />
+        <Label fx:id="nickError" text="Introduce tu nickname" textFill="red" visible="false" wrapText="true"/>
+
+        <Label text="Contraseña*" />
+        <PasswordField fx:id="passwordField" promptText="ej: Pass123!" />
+        <Label fx:id="passError" text="Introduce tu contraseña" textFill="red" visible="false" wrapText="true"/>
+
+    </VBox>
+
+    <!-- BOTONES PRINCIPALES -->
+    <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 0 0;">
+        <Button fx:id="btnLogin" text="Entrar" onAction="#login" />
+        <Button text="Registrarse" onAction="#irRegistro" />
+    </HBox>
+
+    <!-- BOTÓN MODO DESARROLLO -->
+    <Button text="Entrar sin iniciar sesión"
+        onAction="#entrarSinLogin" />
 
 </VBox>
