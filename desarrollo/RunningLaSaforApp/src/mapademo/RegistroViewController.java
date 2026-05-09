@@ -94,11 +94,12 @@ public class RegistroViewController {
                 nickError.setVisible(true);
                 return;
             }
-
+            
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Registro");
-            alert.setHeaderText("Usuario registrado");
-            alert.setContentText("Registro correcto");
+            alert.setTitle("Registro completado");
+            alert.setHeaderText(null);
+            alert.setContentText("Tu cuenta se ha creado correctamente.");
+            alert.getButtonTypes().setAll(ButtonType.OK);
             alert.showAndWait();
 
             volverLogin();
