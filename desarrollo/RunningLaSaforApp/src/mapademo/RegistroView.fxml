@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="mapademo.RegistroViewController">
+<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17" fx:controller="mapademo.RegistroViewController">
 
     <Label style="-fx-font-size: 30px;" text="Crear cuenta"></Label>
 

@@ -3,9 +3,9 @@ package mapademo;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.User;
 
 public class LoginViewController {
 
@@ -14,6 +14,7 @@ public class LoginViewController {
 
     @FXML private Label nickError;
     @FXML private Label passError;
+    @FXML private Label loginError;
 
     @FXML private Button btnLogin;
 
@@ -36,39 +37,44 @@ public class LoginViewController {
     }
 
     private void comprobarCampos() {
-        String nickname = nicknameField.getText();
-        String password = passwordField.getText();
+        String nick = nicknameField.getText();
+        String pass = passwordField.getText();
 
-        boolean nickOk = !nickname.isEmpty();
-        boolean passOk = !password.isEmpty();
+        boolean nickOk = User.checkNickName(nick);
+        boolean passOk = User.checkPassword(pass);
 
-        marcarCampo(nicknameField, nickError, nickOk, !nickname.isEmpty());
-        marcarCampo(passwordField, passError, passOk, !password.isEmpty());
+        marcarCampo(nicknameField, nickError, nickOk, !nick.isEmpty());
+        marcarCampo(passwordField, passError, passOk, !pass.isEmpty());
 
         btnLogin.setDisable(!(nickOk && passOk));
+
+        // Ocultar error de login mientras escribe
+        loginError.setVisible(false);
     }
 
     @FXML
-    private void login() {
+    private void handleLogin() {
         try {
             SportActivityApp app = SportActivityApp.getInstance();
 
             boolean ok = app.login(
-                nicknameField.getText(),
-                passwordField.getText()
+                    nicknameField.getText(),
+                    passwordField.getText()
             );
 
             if (!ok) {
-                passError.setText("Usuario o contraseña incorrectos");
-                passError.setVisible(true);
+                // mostrar error abajo
+                loginError.setVisible(true);
+
+                // poner ambos campos en rojo
+                nicknameField.setStyle("-fx-background-color: #FCE5E0");
                 passwordField.setStyle("-fx-background-color: #FCE5E0");
                 return;
             }
 
-            // ✅ navegación correcta (como antes)
+            // ir a main
             Parent root = FXMLLoader.load(getClass().getResource("MainView.fxml"));
-            Scene scene = nicknameField.getScene();
-            scene.setRoot(root);
+            nicknameField.getScene().setRoot(root);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,21 +82,14 @@ public class LoginViewController {
     }
 
     @FXML
-    private void entrarSinLogin() {
-        try {
-            // ✅ mismo comportamiento que antes
-            Parent root = FXMLLoader.load(getClass().getResource("MainView.fxml"));
-            Scene scene = nicknameField.getScene();
-            scene.setRoot(root);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void irRegistro() throws Exception {
+    private void abrirRegistro() throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("RegistroView.fxml"));
+        nicknameField.getScene().setRoot(root);
+    }
+
+    @FXML
+    private void entrarSinLogin() throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("MainView.fxml"));
         nicknameField.getScene().setRoot(root);
     }
 }
