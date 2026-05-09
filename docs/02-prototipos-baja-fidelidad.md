@@ -51,7 +51,6 @@ Este documento recoge los prototipos de baja fidelidad de la aplicación Running
 | Running la Safor                              Usuario / Avatar |
 +----------------------+---------------------------------------+
 | Actividades          |                                       |
-| Importar GPX         |                                       |
 | Historial            |          CONTENIDO PRINCIPAL          |
 | Mapas                |                                       |
 | Perfil               |                                       |
