@@ -104,7 +104,7 @@ public class MainViewController {
         Optional<ButtonType> result = confirm.showAndWait();
         if (result.isPresent() && result.get() == btnAceptar) {
             app.logout();
-            cambiarEscena("/mapademo/fxml/Login.fxml", "Running la Safor - Inicio de sesión");
+            cambiarEscena("/mapademo/fxml/LoginView.fxml", "Running la Safor - Inicio de sesión");
         }
     }
 
