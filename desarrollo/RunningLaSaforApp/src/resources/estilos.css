@@ -176,3 +176,23 @@
     -fx-background-color: #e8e8ed;
     -fx-text-fill: #1d1d1f;
 }
+/* Menú de usuario desplegable */
+.user-menu-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 20px;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+.user-menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+.user-menu-button .label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.user-menu-button .arrow {
+    -fx-background-color: white;
+    -fx-background-radius: 2px;
+    -fx-padding: 2;
+}
