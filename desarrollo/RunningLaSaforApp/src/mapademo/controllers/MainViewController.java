@@ -109,13 +109,13 @@ public class MainViewController {
     }
 
     @FXML
-    private void showActivities() { loadView("/mapademo/fxml/ActivityList.fxml"); }
+   private void showActivities()   { loadView("/mapademo/fxml/ActividadesView.fxml"); }
     @FXML
-    private void showProfile() { loadView("/mapademo/fxml/Profile.fxml"); }
+    private void showProfile()      { loadView("/mapademo/fxml/PerfilView.fxml"); }
     @FXML
-    private void showHistory() { loadView("/mapademo/fxml/SessionHistory.fxml"); }
+    private void showHistory()      { loadView("/mapademo/fxml/HistorialView.fxml"); }
     @FXML
-    private void showMapManagement() { loadView("/mapademo/fxml/MapManagement.fxml"); }
+    private void showMapManagement(){ loadView("/mapademo/fxml/MapManagement.fxml"); }
 
     @FXML
     private void importActivity() {
