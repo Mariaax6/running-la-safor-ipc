@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="mapademo.controllers.RegistroViewController"
+            stylesheets="@/resources/estilos.css">
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT">
+            <Label text="Running la Safor"/>
+        </HBox>
+    </top>
+    <center>
+        <StackPane styleClass="background-dark">
+            <VBox alignment="CENTER" spacing="16.0" styleClass="card-white"
+                  maxWidth="450">
+                <Label text="Crear cuenta" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <VBox spacing="6.0">
+                    <Label text="Nickname"/>
+                    <TextField fx:id="nickField" promptText="Entre 6 y 15 caracteres"/>
+                </VBox>
+                <VBox spacing="6.0">
+                    <Label text="Correo electrónico"/>
+                    <TextField fx:id="emailField" promptText="usuario@dominio.com"/>
+                </VBox>
+                <VBox spacing="6.0">
+                    <Label text="Contraseña"/>
+                    <PasswordField fx:id="passField" promptText="Al menos 8 caracteres"/>
+                </VBox>
+                <VBox spacing="6.0">
+                    <Label text="Fecha de nacimiento"/>
+                    <DatePicker fx:id="birthDatePicker"/>
+                </VBox>
+                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                    <Button text="Seleccionar avatar" onAction="#chooseAvatar" styleClass="button-secondary"/>
+                    <Label fx:id="avatarLabel" text="Sin avatar"/>
+                </HBox>
+                <Button text="Registrarse" onAction="#handleRegister" styleClass="button-primary" maxWidth="Infinity"/>
+                <Hyperlink text="Volver al inicio" onAction="#goBack"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

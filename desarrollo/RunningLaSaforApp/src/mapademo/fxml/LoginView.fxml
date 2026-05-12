@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="mapademo.controllers.LoginViewController"
+            stylesheets="@/resources/estilos.css">
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT">
+            <Label text="Running la Safor"/>
+        </HBox>
+    </top>
+    <center>
+        <StackPane styleClass="background-dark">
+            <VBox alignment="CENTER" spacing="20.0" styleClass="card-white"
+                  maxWidth="400" maxHeight="-Infinity">
+                <Label text="Iniciar sesión" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+                <VBox spacing="8.0" alignment="CENTER_LEFT">
+                    <Label text="Nickname"/>
+                    <TextField fx:id="nickField" promptText="Tu nickname"/>
+                </VBox>
+                <VBox spacing="8.0" alignment="CENTER_LEFT">
+                    <Label text="Contraseña"/>
+                    <PasswordField fx:id="passwordField" promptText="••••••••"/>
+                </VBox>
+                <Button text="Entrar" onAction="#handleLogin" styleClass="button-primary" maxWidth="Infinity"/>
+                <Hyperlink text="¿No tienes cuenta? Regístrate" onAction="#goToRegister"/>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

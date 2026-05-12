@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="mapademo.controllers.MainViewController"
+            stylesheets="@/resources/estilos.css">
+    <!-- BARRA SUPERIOR -->
+    <top>
+        <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="20">
+    <Label text="Running la Safor" styleClass="header-title" HBox.hgrow="ALWAYS"/>
+    <MenuButton fx:id="userMenuButton" styleClass="user-menu-button">
+        <items>
+            <MenuItem text="Perfil" onAction="#showProfile"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="Cerrar sesión" onAction="#confirmLogout"/>
+        </items>
+    </MenuButton>
+</HBox>
+    </top>
+
+    <!-- MENÚ LATERAL -->
+    <left>
+        <VBox styleClass="sidebar" prefWidth="220">
+            <padding><Insets top="10"/></padding>
+            <Button text="📋  Mis Actividades" onAction="#showActivities" maxWidth="Infinity"/>
+            <Button text="📂  Importar GPX" onAction="#importActivity" maxWidth="Infinity"/>
+            <Button text="🗺️  Gestión Mapas" onAction="#showMapManagement" maxWidth="Infinity"/>
+            <Button text="👤  Perfil" onAction="#showProfile" maxWidth="Infinity"/>
+            <Button text="📊  Historial" onAction="#showHistory" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- CONTENIDO CENTRAL -->
+    <center>
+        <Label text="Bienvenido a Running la Safor"
+               style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #333;"
+               BorderPane.alignment="CENTER"/>
+    </center>
+</BorderPane>
