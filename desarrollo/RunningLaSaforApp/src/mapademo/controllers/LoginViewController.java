@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import upv.ipc.sportlib.SportActivityApp;
 import java.io.IOException;
+import javafx.event.ActionEvent;
 
 public class LoginViewController {
 
@@ -55,5 +56,19 @@ public class LoginViewController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void skipLogin(ActionEvent event) {
+        try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MainView.fxml"));
+                Scene scene = new Scene(loader.load(), mapademo.MainApp.APP_WIDTH, mapademo.MainApp.APP_HEIGHT);
+                scene.getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+                Stage stage = (Stage) nickField.getScene().getWindow();
+                stage.setScene(scene);
+                stage.setTitle("Running la Safor - Panel principal");
+            } catch (IOException e) {
+                showAlert("Error", "No se pudo cargar la ventana principal.");
+            }
     }
 }
