@@ -1,68 +1,178 @@
-/*
- * Copyright (c) 2014, Oracle and/or its affiliates.
- * All rights reserved. Use is subject to license terms.
- *
- * This file is available and licensed under the following license:
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *  - Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *  - Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in
- *    the documentation and/or other materials provided with the distribution.
- *  - Neither the name of Oracle Corporation nor the names of its
- *    contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*******************************************************************************
- *                                                                             *
- * Embedded Styling                                                            *
- *                                                                             *
- ******************************************************************************/
-
-
-
-/*******************************************************************************
- *                                                                             *
- * High Contrast Theme                                                         *
- *                                                                             *
- ******************************************************************************/
-
-.contrast {
-    -app-color-hi: #5bf900;
-    -app-color-lo: black;
-    -app-hover: #666666;
-    -fx-background-color: -app-color-lo;
+/* resources/estilos.css */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    -fx-background-color: #f5f5f7;
+    -fx-text-fill: #1d1d1f;
 }
 
-/*-------------------------- map pin ------------------------- */
-
-.map-pin {
-    -fx-shape: "M13.558,0C6.07,0,0,6.07,0,13.558s13.558,22.346,13.558,22.346s13.558-14.858,13.558-22.346S21.045,0,13.558,0z
-M13.558,20.762c-4.084,0-7.395-3.311-7.395-7.395s3.311-7.395,7.395-7.395c4.084,0,7.396,3.311,7.396,7.395
-S17.642,20.762,13.558,20.762z";    
-    -fx-background-color: black, white;
-    -fx-background-insets: 0, 2;
-    -fx-effect: dropshadow( two-pass-box, rgba(0, 0, 0, 0.5), 10, 0.0, 0, 10 );
-    -fx-pref-width: 48;
-    -fx-pref-height: 60;
+/* Contenedores principales */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+    -fx-padding: 24px;
 }
-.map-pin .arrow-button .arrow {
-    -fx-padding: 0;
+
+/* Botones primarios */
+.button-primary {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: #0077ed;
+}
+.button-primary:pressed {
+    -fx-background-color: #0060c7;
+}
+
+/* Botones secundarios */
+.button-secondary {
+    -fx-background-color: #e8e8ed;
+    -fx-text-fill: #1d1d1f;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+.button-secondary:hover {
+    -fx-background-color: #d2d2d7;
+}
+
+/* Campos de texto */
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #c6c6c8;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px 12px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #86868b;
+}
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #0071e3;
+    -fx-border-width: 2px;
+}
+
+/* Etiquetas */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1d1d1f;
+}
+.label.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* ListView y TableView */
+.list-view, .table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+}
+.list-cell, .table-row-cell {
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+}
+.list-cell:selected, .table-row-cell:selected {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+}
+
+/* Hiperenlaces */
+.hyperlink {
+    -fx-text-fill: #0071e3;
+    -fx-underline: true;
+    -fx-font-size: 14px;
+}
+
+/* Sidebar mejorada */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+    -fx-padding: 30 0 20 0;
+    -fx-spacing: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 0);
+}
+.sidebar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 14 25 14 25;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+.sidebar .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+}
+.sidebar .button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+/* Separador */
+.sidebar .separator {
+    -fx-background: rgba(255, 255, 255, 0.1);
+}
+.sidebar .separator .line {
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+}
+/* Título del panel (opcional) */
+.sidebar .sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 25 20 25;
+}
+/* Fondo global para pantallas de login/registro */
+.background-dark {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+}
+
+/* Cabecera superior */
+.header-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-padding: 15 30;
+}
+.header-bar .label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Tarjeta blanca centrada (usada en login/registro) */
+.card-white {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-padding: 32px;
+    -fx-max-width: 420px;
+}
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 12px 12px 0 0;
+}
+.dialog-pane .button-bar .button {
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 20px;
+}
+.dialog-pane .button-bar .button:first-child {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+}
+.dialog-pane .button-bar .button:first-child:hover {
+    -fx-background-color: #0077ed;
+}
+.dialog-pane .button-bar .button:last-child {
+    -fx-background-color: #e8e8ed;
+    -fx-text-fill: #1d1d1f;
 }
