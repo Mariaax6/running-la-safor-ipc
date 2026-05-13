@@ -270,10 +270,18 @@ public class MapasViewController implements Initializable {
         }
     });
 }
+   
+    private ContextMenu activeContextMenu;
 
     private void setupMapClickHandler() {
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
+                // Cerrar menú anterior si existe
+                if (activeContextMenu != null) {
+                    activeContextMenu.hide();
+                    activeContextMenu = null;
+                }
+                
                 // Mostrar menú contextual para añadir anotación
                 final double clickX = e.getX();
                 final double clickY = e.getY();
@@ -292,6 +300,12 @@ public class MapasViewController implements Initializable {
 
                 menu.getItems().addAll(pointItem, textItem, lineItem, circleItem);
                 menu.show(mapPane, e.getScreenX(), e.getScreenY());
+                
+                // Guardar referencia al menú activo
+                activeContextMenu = menu;
+                
+                // Limpiar referencia cuando se cierre
+                menu.setOnHidden(ev -> activeContextMenu = null);
             }
         });
     }
