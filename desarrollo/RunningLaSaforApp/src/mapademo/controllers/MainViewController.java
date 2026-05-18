@@ -58,53 +58,46 @@ public class MainViewController {
     }
 
     private void cargarUsuarioActual() {
-        User user = app.getCurrentUser();
-        if (user != null) {
-            Label nameLabel = new Label(user.getNickName());
-            nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+    User user = app.getCurrentUser();
+    if (user != null) {
+        Label nameLabel = new Label(user.getNickName());
+        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
-            ImageView avatarView = new ImageView();
-            avatarView.setFitWidth(30);
-            avatarView.setFitHeight(30);
-            avatarView.setPreserveRatio(true);
+        ImageView avatarView = new ImageView();
+        avatarView.setFitWidth(30);
+        avatarView.setFitHeight(30);
+        avatarView.setPreserveRatio(true);
 
-            String avatarPath = user.getAvatarPath();
-            if (avatarPath != null && !avatarPath.isEmpty()) {
-                File avatarFile = new File(avatarPath);
-                if (avatarFile.exists()) {
-                    avatarView.setImage(new Image(avatarFile.toURI().toString()));
-                }
-            } else {
-                try {
-                    avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
-                } catch (Exception ignored) {}
+        String avatarPath = user.getAvatarPath();
+        if (avatarPath != null && !avatarPath.isEmpty()) {
+            File avatarFile = new File(avatarPath);
+            if (avatarFile.exists()) {
+                avatarView.setImage(new Image(avatarFile.toURI().toString()));
             }
-
-            HBox hbox = new HBox(8);
-            hbox.setAlignment(javafx.geometry.Pos.CENTER);
-            hbox.getChildren().addAll(avatarView, nameLabel);
-            userMenuButton.setGraphic(hbox);
-            userMenuButton.setText(null);
-
-            // Crear menú contextual (sustituye cualquier menú anterior)
-            ContextMenu menu = new ContextMenu();
-            menu.setStyle("-fx-background-color: white; -fx-background-radius: 8px; " +
-                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);");
-
-            MenuItem perfil = new MenuItem("Perfil");
-            perfil.setStyle("-fx-text-fill: #1d1d1f; -fx-font-size: 14px;");
-            perfil.setOnAction(e -> showProfile());
-
-            MenuItem logout = new MenuItem("Cerrar sesión");
-            logout.setStyle("-fx-text-fill: #1d1d1f; -fx-font-size: 14px;");
-            logout.setOnAction(e -> confirmLogout());
-
-            menu.getItems().addAll(perfil, new SeparatorMenuItem(), logout);
-
-            userMenuButton.setContextMenu(menu);
+        } else {
+            try {
+                avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
+            } catch (Exception ignored) {}
         }
-    }
 
+        HBox hbox = new HBox(8);
+        hbox.setAlignment(javafx.geometry.Pos.CENTER);
+        hbox.getChildren().addAll(avatarView, nameLabel);
+        userMenuButton.setGraphic(hbox);
+        userMenuButton.setText(null);
+
+        // Limpiar items previos (por si acaso)
+        userMenuButton.getItems().clear();
+
+        // Crear y añadir los items directamente al MenuButton
+        MenuItem perfil = new MenuItem("Perfil");
+        perfil.setOnAction(e -> showProfile());
+        MenuItem cerrarSesion = new MenuItem("Cerrar sesión");
+        cerrarSesion.setOnAction(e -> confirmLogout());
+
+        userMenuButton.getItems().addAll(perfil, new SeparatorMenuItem(), cerrarSesion);
+    }
+}
     @FXML
     private void confirmLogout() {
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);

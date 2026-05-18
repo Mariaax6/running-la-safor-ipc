@@ -185,3 +185,14 @@
     -fx-background-color: #e8e8ed;
     -fx-text-fill: #1d1d1f;
 }
+/* Estilos para el popup del MenuButton */
+.user-menu-button .menu-item .label {
+    -fx-text-fill: #1d1d1f;
+    -fx-font-size: 14px;
+}
+
+.user-menu-button .context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
