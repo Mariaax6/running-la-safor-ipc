@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.Group?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.65" xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="mapademo.controllers.MapasViewController"
+           stylesheets="@/resources/estilos.css">
+    <items>
+        <!-- Lado izquierdo: mapa + controles de zoom -->
+        <VBox>
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS"
+                        pannable="true" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: #d2d2d7;">
+                <content>
+                    <Group fx:id="contentGroup">
+                        <Group fx:id="zoomGroup">
+                            <Pane fx:id="mapPane"/>
+                        </Group>
+                    </Group>
+                </content>
+            </ScrollPane>
+            <HBox spacing="10" alignment="CENTER" VBox.vgrow="NEVER"
+                  style="-fx-background-color: white; -fx-padding: 8px;">
+                <Button text="−" onAction="#zoomOut" styleClass="button-secondary"/>
+                <Slider fx:id="zoom_slider" HBox.hgrow="ALWAYS" blockIncrement="0.1"/>
+                <Button text="+" onAction="#zoomIn" styleClass="button-secondary"/>
+            </HBox>
+        </VBox>
+        <!-- Lado derecho: anotaciones y perfil de desnivel -->
+        <VBox spacing="16.0" style="-fx-padding: 24px;">
+            <Label text="Anotaciones" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <ListView fx:id="annotationList" VBox.vgrow="ALWAYS"/>
+            <Label text="Perfil de desnivel" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+            <LineChart fx:id="elevationChart" title="Altitud vs Distancia" legendVisible="false"
+                       style="-fx-background-color: white; -fx-background-radius: 8px;">
+                <xAxis>
+                    <NumberAxis label="Distancia (km)"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis label="Altitud (m)"/>
+                </yAxis>
+            </LineChart>
+        </VBox>
+    </items>
+</SplitPane>
