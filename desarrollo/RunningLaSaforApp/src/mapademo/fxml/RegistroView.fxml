@@ -37,8 +37,12 @@
                     <Button text="Seleccionar avatar" onAction="#chooseAvatar" styleClass="button-secondary"/>
                     <Label fx:id="avatarLabel" text="Sin avatar"/>
                 </HBox>
-                <Button text="Registrarse" onAction="#handleRegister" styleClass="button-primary" maxWidth="Infinity"/>
-                <Hyperlink text="Volver al inicio" onAction="#goBack"/>
+                <HBox spacing="10.0" alignment="CENTER">
+                    <Button text="Registrarse" onAction="#handleRegister"
+                            styleClass="button-primary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                    <Button text="Cancelar" onAction="#goBack"
+                            styleClass="button-secondary" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                </HBox>
             </VBox>
         </StackPane>
     </center>

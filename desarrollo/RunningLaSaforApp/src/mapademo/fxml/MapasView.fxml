@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -46,6 +45,9 @@
                     <NumberAxis label="Altitud (m)"/>
                 </yAxis>
             </LineChart>
+            <!-- Etiqueta para mostrar altitud y distancia al hacer clic en el mapa -->
+            <Label fx:id="altitudeInfoLabel" text="Altitud: -- m  |  Distancia: -- km"
+                   style="-fx-font-size: 13px; -fx-text-fill: #555; -fx-padding: 4 0 0 0;"/>
         </VBox>
     </items>
 </SplitPane>
