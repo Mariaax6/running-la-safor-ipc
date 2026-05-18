@@ -75,19 +75,33 @@ public class MainViewController {
                     avatarView.setImage(new Image(avatarFile.toURI().toString()));
                 }
             } else {
-                // Imagen por defecto (puedes usar un recurso)
                 try {
                     avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
-                } catch (Exception e) {
-                    // Si no existe, no pasa nada
-                }
+                } catch (Exception ignored) {}
             }
 
             HBox hbox = new HBox(8);
             hbox.setAlignment(javafx.geometry.Pos.CENTER);
             hbox.getChildren().addAll(avatarView, nameLabel);
             userMenuButton.setGraphic(hbox);
-            userMenuButton.setText(null); // Ocultar texto del botón
+            userMenuButton.setText(null);
+
+            // Crear menú contextual (sustituye cualquier menú anterior)
+            ContextMenu menu = new ContextMenu();
+            menu.setStyle("-fx-background-color: white; -fx-background-radius: 8px; " +
+                          "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);");
+
+            MenuItem perfil = new MenuItem("Perfil");
+            perfil.setStyle("-fx-text-fill: #1d1d1f; -fx-font-size: 14px;");
+            perfil.setOnAction(e -> showProfile());
+
+            MenuItem logout = new MenuItem("Cerrar sesión");
+            logout.setStyle("-fx-text-fill: #1d1d1f; -fx-font-size: 14px;");
+            logout.setOnAction(e -> confirmLogout());
+
+            menu.getItems().addAll(perfil, new SeparatorMenuItem(), logout);
+
+            userMenuButton.setContextMenu(menu);
         }
     }
 
@@ -108,14 +122,10 @@ public class MainViewController {
         }
     }
 
-    @FXML
-   private void showActivities()   { loadView("/mapademo/fxml/ActividadesView.fxml"); }
-    @FXML
-    private void showProfile()      { loadView("/mapademo/fxml/PerfilView.fxml"); }
-    @FXML
-    private void showHistory()      { loadView("/mapademo/fxml/HistorialView.fxml"); }
-    @FXML
-    private void showMapManagement(){ loadView("/mapademo/fxml/MapManagement.fxml"); }
+    @FXML private void showActivities() { loadView("/mapademo/fxml/ActividadesView.fxml"); }
+    @FXML private void showProfile() { loadView("/mapademo/fxml/PerfilView.fxml"); }
+    @FXML private void showHistory() { loadView("/mapademo/fxml/HistorialView.fxml"); }
+    @FXML private void showMapManagement() { loadView("/mapademo/fxml/MapManagement.fxml"); }
 
     @FXML
     private void importActivity() {

@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="mainPane" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="mapademo.controllers.MainViewController"
             stylesheets="@/resources/estilos.css">
+
     <!-- BARRA SUPERIOR -->
     <top>
-        <HBox styleClass="header-bar" alignment="CENTER_LEFT" spacing="20">
-    <Label text="Running la Safor" styleClass="header-title" HBox.hgrow="ALWAYS"/>
-    <MenuButton fx:id="userMenuButton" styleClass="user-menu-button">
-        <items>
-            <MenuItem text="Perfil" onAction="#showProfile"/>
-            <SeparatorMenuItem/>
-            <MenuItem text="Cerrar sesión" onAction="#confirmLogout"/>
-        </items>
-    </MenuButton>
-</HBox>
+        <AnchorPane styleClass="header-bar" prefHeight="50">
+            <Label text="Running la Safor" styleClass="header-title"
+                   AnchorPane.leftAnchor="30" AnchorPane.topAnchor="10"/>
+            <!-- Menú de usuario: sin items (se añaden desde el controlador) -->
+            <MenuButton fx:id="userMenuButton" styleClass="user-menu-button"
+                        AnchorPane.rightAnchor="30" AnchorPane.topAnchor="5"/>
+        </AnchorPane>
     </top>
 
     <!-- MENÚ LATERAL -->
@@ -35,7 +31,6 @@
         </VBox>
     </left>
 
-    <!-- CONTENIDO CENTRAL -->
     <center>
         <Label text="Bienvenido a Running la Safor"
                style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #333;"

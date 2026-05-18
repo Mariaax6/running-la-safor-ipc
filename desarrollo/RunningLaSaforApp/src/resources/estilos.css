@@ -13,9 +13,9 @@
     -fx-padding: 24px;
 }
 
-/* Botones primarios */
+/* Botones primarios (naranja) */
 .button-primary {
-    -fx-background-color: #0071e3;
+    -fx-background-color: #e67e22;
     -fx-text-fill: white;
     -fx-font-weight: bold;
     -fx-background-radius: 8px;
@@ -23,10 +23,10 @@
     -fx-cursor: hand;
 }
 .button-primary:hover {
-    -fx-background-color: #0077ed;
+    -fx-background-color: #f39c12;
 }
 .button-primary:pressed {
-    -fx-background-color: #0060c7;
+    -fx-background-color: #d35400;
 }
 
 /* Botones secundarios */
@@ -78,7 +78,7 @@
     -fx-font-size: 14px;
 }
 .list-cell:selected, .table-row-cell:selected {
-    -fx-background-color: #0071e3;
+    -fx-background-color: #e67e22;
     -fx-text-fill: white;
 }
 
@@ -115,20 +115,7 @@
 .sidebar .button:pressed {
     -fx-background-color: rgba(255, 255, 255, 0.2);
 }
-/* Separador */
-.sidebar .separator {
-    -fx-background: rgba(255, 255, 255, 0.1);
-}
-.sidebar .separator .line {
-    -fx-border-color: rgba(255, 255, 255, 0.3);
-}
-/* Título del panel (opcional) */
-.sidebar .sidebar-title {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-padding: 0 25 20 25;
-}
+
 /* Fondo global para pantallas de login/registro */
 .background-dark {
     -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
@@ -137,12 +124,12 @@
 /* Cabecera superior */
 .header-bar {
     -fx-background-color: rgba(0, 0, 0, 0.3);
-    -fx-padding: 15 30;
+    -fx-padding: 0;
 }
-.header-bar .label {
-    -fx-text-fill: white;
+.header-title {
     -fx-font-size: 20px;
     -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
 /* Tarjeta blanca centrada (usada en login/registro) */
@@ -153,6 +140,28 @@
     -fx-padding: 32px;
     -fx-max-width: 420px;
 }
+
+/* Botón del usuario */
+.user-menu-button {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20px;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+.user-menu-button:hover {
+    -fx-background-color: #f39c12;
+}
+.user-menu-button .label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+.user-menu-button .arrow {
+    -fx-background-color: white;
+}
+
+/* Diálogos */
 .dialog-pane {
     -fx-background-color: white;
     -fx-background-radius: 12px;
@@ -166,33 +175,13 @@
     -fx-padding: 8px 20px;
 }
 .dialog-pane .button-bar .button:first-child {
-    -fx-background-color: #0071e3;
+    -fx-background-color: #e67e22;
     -fx-text-fill: white;
 }
 .dialog-pane .button-bar .button:first-child:hover {
-    -fx-background-color: #0077ed;
+    -fx-background-color: #f39c12;
 }
 .dialog-pane .button-bar .button:last-child {
     -fx-background-color: #e8e8ed;
     -fx-text-fill: #1d1d1f;
-}
-/* Menú de usuario desplegable */
-.user-menu-button {
-    -fx-background-color: rgba(255, 255, 255, 0.2);
-    -fx-background-radius: 20px;
-    -fx-padding: 6 14 6 14;
-    -fx-cursor: hand;
-}
-.user-menu-button:hover {
-    -fx-background-color: rgba(255, 255, 255, 0.35);
-}
-.user-menu-button .label {
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-}
-.user-menu-button .arrow {
-    -fx-background-color: white;
-    -fx-background-radius: 2px;
-    -fx-padding: 2;
 }
