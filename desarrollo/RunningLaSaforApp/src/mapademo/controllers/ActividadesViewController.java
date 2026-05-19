@@ -1,24 +1,19 @@
 package mapademo.controllers;
 
-import upv.ipc.sportlib.SportActivityApp;
-import upv.ipc.sportlib.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 
-
-import upv.ipc.sportlib.Activity;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
-import java.util.Date;  // solo si realmente lo usas en otra parte, si no, elimínala
-
-
+import java.util.Optional;
+import upv.ipc.sportlib.Activity;
+import upv.ipc.sportlib.SportActivityApp;
 
 public class ActividadesViewController {
 
@@ -42,27 +37,65 @@ public class ActividadesViewController {
             }
         });
 
-        // Al seleccionar una actividad se carga el mapa
-        activityListView.getSelectionModel().selectedItemProperty().addListener((obs, old, act) -> {
-            if (act != null) {
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MapasView.fxml"));
-                    Parent view = loader.load();
-                    MapasViewController mapCtrl = loader.getController();
-                    mapCtrl.setActivity(act);
-                    // Obtenemos el BorderPane raíz del Main.fxml (estamos dentro del centro)
-                    BorderPane mainPane = (BorderPane) activityListView.getScene().getRoot();
-                    mainPane.setCenter(view);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        // Doble clic para abrir la actividad en el mapa
+        activityListView.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                Activity selected = activityListView.getSelectionModel().getSelectedItem();
+                if (selected != null) {
+                    abrirActividadEnMapa(selected);
                 }
             }
         });
     }
 
     @FXML
+    private void verActividad() {
+        Activity selected = activityListView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            mostrarAlerta("Selecciona una actividad", "Por favor, selecciona una actividad de la lista.");
+            return;
+        }
+        abrirActividadEnMapa(selected);
+    }
+
+    private void abrirActividadEnMapa(Activity act) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MapasView.fxml"));
+            Parent view = loader.load();
+            MapasViewController mapCtrl = loader.getController();
+            mapCtrl.setActivity(act);
+            BorderPane mainPane = (BorderPane) activityListView.getScene().getRoot();
+            mainPane.setCenter(view);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void eliminarActividad() {
+        Activity selected = activityListView.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            mostrarAlerta("Selecciona una actividad", "Por favor, selecciona una actividad para eliminar.");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Eliminar actividad");
+        confirm.setHeaderText("¿Estás seguro de que deseas eliminar esta actividad?");
+        confirm.setContentText("Esta acción no se puede deshacer.");
+        ButtonType btnSi = new ButtonType("Sí, eliminar", ButtonBar.ButtonData.OK_DONE);
+        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        confirm.getButtonTypes().setAll(btnSi, btnCancelar);
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == btnSi) {
+            app.removeActivity(selected);
+            activityListView.getItems().remove(selected);
+            mostrarAlerta("Eliminada", "La actividad se ha eliminado correctamente.");
+        }
+    }
+
+    @FXML
     private void showMonthlyStats() {
-        
         List<Activity> activities = app.getUserActivities();
         LocalDate now = LocalDate.now();
         double totalDist = 0, totalGain = 0, totalLoss = 0;
@@ -70,8 +103,8 @@ public class ActividadesViewController {
         int count = 0;
         for (Activity a : activities) {
             if (a.getStartTime() != null) {
-                LocalDateTime startTime = a.getStartTime();    // el método devuelve LocalDateTime
-                LocalDate date = startTime.toLocalDate();       // extrae la fecha
+                LocalDateTime startTime = a.getStartTime();
+                LocalDate date = startTime.toLocalDate();
                 if (date.getMonth() == now.getMonth() && date.getYear() == now.getYear()) {
                     totalDist += a.getTotalDistance();
                     totalSeconds += a.getDuration().getSeconds();
@@ -86,5 +119,13 @@ public class ActividadesViewController {
         statsLabel.setText(
             String.format("Actividades del mes: %d\nDistancia: %.2f km\nTiempo: %dh %dm\nDesnivel positivo: %.0f m\nDesnivel negativo: %.0f m",
                 count, totalDist/1000.0, hours, minutes, totalGain, totalLoss));
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

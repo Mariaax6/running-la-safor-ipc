@@ -8,16 +8,19 @@
       fx:controller="mapademo.controllers.HistorialViewController"
       stylesheets="@../resources/estilos.css">
     <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
+    
     <Label text="Historial de sesiones" styleClass="title"/>
+    
     <TableView fx:id="sessionTable" VBox.vgrow="ALWAYS">
-    <columns>
-        <TableColumn fx:id="colStart" text="Inicio" prefWidth="120"/>
-        <TableColumn fx:id="colEnd" text="Fin" prefWidth="120"/>
-        <TableColumn fx:id="colDuration" text="Duración" prefWidth="80"/>
-        <TableColumn fx:id="colImported" text="Act. importadas" prefWidth="100"/>
-        <TableColumn fx:id="colViewed" text="Act. vistas" prefWidth="100"/>
-        <TableColumn fx:id="colAnnotations" text="Anotaciones" prefWidth="100"/>
-    </columns>
-</TableView>
+        <columns>
+            <TableColumn fx:id="colStart" text="Inicio" prefWidth="120"/>
+            <TableColumn fx:id="colEnd" text="Fin" prefWidth="120"/>
+            <TableColumn fx:id="colDuration" text="Duración" prefWidth="80"/>
+            <TableColumn fx:id="colImported" text="Act. importadas" prefWidth="100"/>
+            <TableColumn fx:id="colViewed" text="Act. vistas" prefWidth="100"/>
+            <TableColumn fx:id="colAnnotations" text="Anotaciones" prefWidth="100"/>
+        </columns>
+    </TableView>
+    
     <Label fx:id="totalLabel" wrapText="true" style="-fx-background-color: white; -fx-padding: 16px; -fx-background-radius: 8px;"/>
 </VBox>
