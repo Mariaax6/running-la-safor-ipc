@@ -1,4 +1,3 @@
-
 package mapademo.controllers;
 
 import javafx.application.Platform;
@@ -37,16 +36,26 @@ public class MainViewController {
             Stage stage = (Stage) mainPane.getScene().getWindow();
             stage.setOnCloseRequest(event -> {
                 if (app.getCurrentUser() != null) {
+                    ButtonType cancelarBtn = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    ButtonType salirBtn = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
+
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setTitle("Salir de la aplicación");
-                    confirm.setHeaderText("¿Seguro que quieres salir?");
-                    confirm.setContentText("Se cerrará tu sesión actual y se guardarán los datos.");
-                    ButtonType btnSalir = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
-                    ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-                    confirm.getButtonTypes().setAll(btnSalir, btnCancelar);
+                    confirm.setHeaderText(null);
+                    confirm.setContentText("¿Seguro que quieres salir? Se cerrará tu sesión actual y se guardarán los datos.");
+                    confirm.getButtonTypes().setAll(cancelarBtn, salirBtn);
                     confirm.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+
+                    confirm.setOnShown(e -> {
+                        Button cancelar = (Button) confirm.getDialogPane().lookupButton(cancelarBtn);
+                        Button salir = (Button) confirm.getDialogPane().lookupButton(salirBtn);
+                        salir.setDefaultButton(false);
+                        cancelar.setDefaultButton(true);
+                        cancelar.requestFocus();
+                    });
+
                     Optional<ButtonType> result = confirm.showAndWait();
-                    if (result.isPresent() && result.get() == btnSalir) {
+                    if (result.isPresent() && result.get() == salirBtn) {
                         app.logout();
                         stage.close();
                     } else {
@@ -58,58 +67,68 @@ public class MainViewController {
     }
 
     private void cargarUsuarioActual() {
-    User user = app.getCurrentUser();
-    if (user != null) {
-        Label nameLabel = new Label(user.getNickName());
-        nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
+        User user = app.getCurrentUser();
+        if (user != null) {
+            Label nameLabel = new Label(user.getNickName());
+            nameLabel.setStyle("-fx-text-fill: white; -fx-font-size: 14px;");
 
-        ImageView avatarView = new ImageView();
-        avatarView.setFitWidth(30);
-        avatarView.setFitHeight(30);
-        avatarView.setPreserveRatio(true);
+            ImageView avatarView = new ImageView();
+            avatarView.setFitWidth(30);
+            avatarView.setFitHeight(30);
+            avatarView.setPreserveRatio(true);
 
-        String avatarPath = user.getAvatarPath();
-        if (avatarPath != null && !avatarPath.isEmpty()) {
-            File avatarFile = new File(avatarPath);
-            if (avatarFile.exists()) {
-                avatarView.setImage(new Image(avatarFile.toURI().toString()));
+            String avatarPath = user.getAvatarPath();
+            if (avatarPath != null && !avatarPath.isEmpty()) {
+                File avatarFile = new File(avatarPath);
+                if (avatarFile.exists()) {
+                    avatarView.setImage(new Image(avatarFile.toURI().toString()));
+                }
+            } else {
+                try {
+                    avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
+                } catch (Exception ignored) {}
             }
-        } else {
-            try {
-                avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
-            } catch (Exception ignored) {}
+
+            HBox hbox = new HBox(8);
+            hbox.setAlignment(javafx.geometry.Pos.CENTER);
+            hbox.getChildren().addAll(avatarView, nameLabel);
+            userMenuButton.setGraphic(hbox);
+            userMenuButton.setText(null);
+
+            // Limpiar items previos (por si acaso)
+            userMenuButton.getItems().clear();
+
+            // Crear y añadir los items directamente al MenuButton
+            MenuItem perfil = new MenuItem("Perfil");
+            perfil.setOnAction(e -> showProfile());
+            MenuItem cerrarSesion = new MenuItem("Cerrar sesión");
+            cerrarSesion.setOnAction(e -> confirmLogout());
+
+            userMenuButton.getItems().addAll(perfil, new SeparatorMenuItem(), cerrarSesion);
         }
-
-        HBox hbox = new HBox(8);
-        hbox.setAlignment(javafx.geometry.Pos.CENTER);
-        hbox.getChildren().addAll(avatarView, nameLabel);
-        userMenuButton.setGraphic(hbox);
-        userMenuButton.setText(null);
-
-        // Limpiar items previos (por si acaso)
-        userMenuButton.getItems().clear();
-
-        // Crear y añadir los items directamente al MenuButton
-        MenuItem perfil = new MenuItem("Perfil");
-        perfil.setOnAction(e -> showProfile());
-        MenuItem cerrarSesion = new MenuItem("Cerrar sesión");
-        cerrarSesion.setOnAction(e -> confirmLogout());
-
-        userMenuButton.getItems().addAll(perfil, new SeparatorMenuItem(), cerrarSesion);
     }
-}
+    
     @FXML
     private void confirmLogout() {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Cerrar sesión");
-        confirm.setHeaderText("¿Estás seguro de que deseas cerrar sesión?");
-        confirm.setContentText("Se guardarán los datos de la sesión actual.");
-        ButtonType btnAceptar = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirm.getButtonTypes().setAll(btnAceptar, btnCancelar);
-        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == btnAceptar) {
+        ButtonType cancelarBtn = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cerrarBtn = new ButtonType("Cerrar sesión", ButtonBar.ButtonData.OK_DONE);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cerrar sesión");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Seguro que quieres cerrar sesión?");
+        alert.getButtonTypes().setAll(cancelarBtn, cerrarBtn);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+
+        alert.setOnShown(e -> {
+            Button cancelar = (Button) alert.getDialogPane().lookupButton(cancelarBtn);
+            Button cerrar = (Button) alert.getDialogPane().lookupButton(cerrarBtn);
+            cerrar.setDefaultButton(false);
+            cancelar.setDefaultButton(true);
+            cancelar.requestFocus();
+        });
+
+        if (alert.showAndWait().get() == cerrarBtn) {
             app.logout();
             cambiarEscena("/mapademo/fxml/LoginView.fxml", "Running la Safor - Inicio de sesión");
         }
