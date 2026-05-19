@@ -94,11 +94,8 @@ public class MainViewController {
             hbox.getChildren().addAll(avatarView, nameLabel);
             userMenuButton.setGraphic(hbox);
             userMenuButton.setText(null);
-
-            // Limpiar items previos (por si acaso)
             userMenuButton.getItems().clear();
 
-            // Crear y añadir los items directamente al MenuButton
             MenuItem perfil = new MenuItem("Perfil");
             perfil.setOnAction(e -> showProfile());
             MenuItem cerrarSesion = new MenuItem("Cerrar sesión");

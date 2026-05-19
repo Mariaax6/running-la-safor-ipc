@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -21,7 +20,6 @@ public class PerfilViewController {
     @FXML private DatePicker birthPicker;
     @FXML private Label avatarLabel;
     @FXML private Button btnGuardar;
-
     @FXML private Label emailError;
     @FXML private Label passError;
     @FXML private Label fechaError;
@@ -40,15 +38,12 @@ public class PerfilViewController {
             passField.clear();
         }
         
-        // Nickname deshabilitado visualmente
         nickField.setDisable(true);
         nickField.setStyle("-fx-opacity: 0.7; -fx-background-color: #f0f0f0;");
 
-        // Deshabilitar botón al inicio
         btnGuardar.setDisable(true);
         btnGuardar.setStyle("-fx-opacity: 0.6;");
 
-        // Listeners para validación en tiempo real
         emailField.textProperty().addListener((obs, o, n) -> comprobarCampos());
         passField.textProperty().addListener((obs, o, n) -> comprobarCampos());
         birthPicker.valueProperty().addListener((obs, o, n) -> comprobarCampos());
@@ -113,12 +108,10 @@ public class PerfilViewController {
         String password = passField.getText();
         LocalDate fecha = birthPicker.getValue();
 
-        // Para PERFIL: los campos vacíos son válidos (mantienen el valor actual)
         boolean emailOk = email.isEmpty() || User.checkEmail(email);
         boolean passOk = password.isEmpty() || User.checkPassword(password);
         boolean fechaOk = fecha != null && User.isOlderThan(fecha, 12);
 
-        // Email
         if (!email.isEmpty()) {
             if (!emailOk) {
                 emailError.setText("❌ usuario@dominio");
@@ -132,7 +125,6 @@ public class PerfilViewController {
             marcarCampoEmail(emailField, emailError, false, false);
         }
 
-        // Contraseña
         if (!password.isEmpty()) {
             if (!passOk) {
                 passError.setText("❌ 8-20 caracteres, con mayúscula, minúscula, número y símbolo");
@@ -146,15 +138,12 @@ public class PerfilViewController {
             marcarCampoPass(passField, passError, false, false);
         }
 
-        // Fecha (solo mensaje, sin bordes)
         if (fecha != null) {
             marcarCampoFecha(fechaOk, true);
         } else {
             marcarCampoFecha(false, false);
         }
 
-        // Habilitar/deshabilitar botón
-        // Los campos vacíos son válidos, por eso se usa emailOk y passOk directamente
         boolean valido = emailOk && passOk && fechaOk;
         btnGuardar.setDisable(!valido);
         if (valido) {
@@ -175,7 +164,6 @@ public class PerfilViewController {
         if (f != null) {
             newAvatarPath = f.getAbsolutePath();
             avatarLabel.setText(f.getName());
-            // Re-validar al seleccionar avatar (por si acaso)
             comprobarCampos();
         }
     }
@@ -188,7 +176,6 @@ public class PerfilViewController {
         String pass = passField.getText().trim();
         LocalDate birth = birthPicker.getValue();
 
-        // Validaciones: solo validar si el campo NO está vacío
         if (!email.isEmpty() && !User.checkEmail(email)) {
             showAlert("Email inválido", "Formato incorrecto.");
             return;
@@ -204,10 +191,7 @@ public class PerfilViewController {
             return;
         }
 
-        // Si la contraseña está vacía, mantener la actual
         String finalPass = pass.isEmpty() ? currentUser.getPassword() : pass;
-        
-        // Si el email está vacío, mantener el actual
         String finalEmail = email.isEmpty() ? currentUser.getEmail() : email;
 
         boolean ok = app.updateCurrentUser(finalEmail, finalPass, birth, newAvatarPath);

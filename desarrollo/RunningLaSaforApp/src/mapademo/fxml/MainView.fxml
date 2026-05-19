@@ -9,17 +9,12 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="mainPane" stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.MainViewController">
-
-    <!-- BARRA SUPERIOR -->
     <top>
         <AnchorPane prefHeight="50" styleClass="header-bar">
             <Label styleClass="header-title" text="Running la Safor" AnchorPane.leftAnchor="30" AnchorPane.topAnchor="10" />
-            <!-- Menú de usuario: sin items (se añaden desde el controlador) -->
             <MenuButton fx:id="userMenuButton" styleClass="user-menu-button" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="30" AnchorPane.topAnchor="5" />
         </AnchorPane>
     </top>
-
-    <!-- MENÚ LATERAL -->
     <left>
         <VBox prefWidth="220" styleClass="sidebar">
             <padding><Insets top="10" /></padding>
@@ -30,7 +25,6 @@
             <Button maxWidth="Infinity" onAction="#showHistory" text="📊  Historial" />
         </VBox>
     </left>
-
     <center>
         <Label style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Bienvenido a Running la Safor" BorderPane.alignment="CENTER" />
     </center>
