@@ -46,6 +46,7 @@ public class PerfilViewController {
 
         // Deshabilitar botón al inicio
         btnGuardar.setDisable(true);
+        btnGuardar.setStyle("-fx-opacity: 0.6;");
 
         // Listeners para validación en tiempo real
         emailField.textProperty().addListener((obs, o, n) -> comprobarCampos());
@@ -112,7 +113,8 @@ public class PerfilViewController {
         String password = passField.getText();
         LocalDate fecha = birthPicker.getValue();
 
-        boolean emailOk = User.checkEmail(email);
+        // Para PERFIL: los campos vacíos son válidos (mantienen el valor actual)
+        boolean emailOk = email.isEmpty() || User.checkEmail(email);
         boolean passOk = password.isEmpty() || User.checkPassword(password);
         boolean fechaOk = fecha != null && User.isOlderThan(fecha, 12);
 
@@ -152,8 +154,14 @@ public class PerfilViewController {
         }
 
         // Habilitar/deshabilitar botón
-        boolean valido = emailOk && (password.isEmpty() || passOk) && fechaOk;
+        // Los campos vacíos son válidos, por eso se usa emailOk y passOk directamente
+        boolean valido = emailOk && passOk && fechaOk;
         btnGuardar.setDisable(!valido);
+        if (valido) {
+            btnGuardar.setStyle("-fx-opacity: 1.0;");
+        } else {
+            btnGuardar.setStyle("-fx-opacity: 0.6;");
+        }
     }
 
     @FXML
@@ -167,6 +175,8 @@ public class PerfilViewController {
         if (f != null) {
             newAvatarPath = f.getAbsolutePath();
             avatarLabel.setText(f.getName());
+            // Re-validar al seleccionar avatar (por si acaso)
+            comprobarCampos();
         }
     }
 
@@ -178,7 +188,7 @@ public class PerfilViewController {
         String pass = passField.getText().trim();
         LocalDate birth = birthPicker.getValue();
 
-        // Validaciones
+        // Validaciones: solo validar si el campo NO está vacío
         if (!email.isEmpty() && !User.checkEmail(email)) {
             showAlert("Email inválido", "Formato incorrecto.");
             return;

@@ -1,57 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="16.0" maxWidth="520" style="-fx-padding: 20 40 20 40;"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="mapademo.controllers.PerfilViewController"
-      styleClass="card-white" stylesheets="@/resources/estilos.css">
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxWidth="520" spacing="16.0" style="-fx-padding: 20 40 20 40;" styleClass="card-white" stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.PerfilViewController">
     
-    <Label text="Modificar perfil" style="-fx-font-size: 22px; -fx-font-weight: bold;"/>
+    <Label style="-fx-font-size: 22px; -fx-font-weight: bold;" text="Modificar perfil" />
     
     <!-- Campo Nickname con etiqueta -->
     <VBox spacing="4.0">
-        <Label text="Nickname"/>
-        <TextField fx:id="nickField" editable="false"/>
+        <Label text="Nickname" />
+        <TextField fx:id="nickField" editable="false" />
     </VBox>
     
     <VBox spacing="4.0">
-        <Label text="Correo electrónico"/>
-        <TextField fx:id="emailField"/>
-        <Label fx:id="emailError" 
-               style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;"
-               visible="false" wrapText="true"/>
+        <Label text="Correo electrónico" />
+        <TextField fx:id="emailField" />
+        <Label fx:id="emailError" style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;" visible="false" wrapText="true" />
     </VBox>
     
     <VBox spacing="4.0">
-        <Label text="Nueva contraseña"/>
-        <PasswordField fx:id="passField" promptText="Dejar en blanco para mantener"/>
-        <Label fx:id="passError" 
-               style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;"
-               visible="false" wrapText="true"/>
+        <Label text="Nueva contraseña" />
+        <PasswordField fx:id="passField" promptText="Dejar en blanco para mantener" />
+        <Label fx:id="passError" style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;" visible="false" wrapText="true" />
     </VBox>
     
     <VBox spacing="4.0">
-        <Label text="Fecha de nacimiento"/>
-        <DatePicker fx:id="birthPicker" style="-fx-padding: 5;"/>
-        <Label fx:id="fechaError" 
-               style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;"
-               visible="false" wrapText="true"/>
+        <Label text="Fecha de nacimiento" />
+        <DatePicker fx:id="birthPicker" style="-fx-padding: 5;" />
+        <Label fx:id="fechaError" style="-fx-font-size: 11px; -fx-padding: 2 0 0 5;" visible="false" wrapText="true" />
     </VBox>
     
     <!-- Separador -->
-    <Separator maxWidth="350" opacity="1" style="-fx-padding: 5 0;"/>
+    <Separator maxWidth="350" opacity="1" style="-fx-padding: 5 0;" />
     
-    <HBox spacing="10.0" alignment="CENTER_LEFT">
-        <Button text="Cambiar avatar" onAction="#chooseAvatar" styleClass="button-secondary"/>
-        <Label fx:id="avatarLabel" style="-fx-text-fill: #86868b; -fx-font-style: italic;" text="Sin avatar"/>
+    <HBox alignment="CENTER_LEFT" spacing="10.0">
+        <Button onAction="#chooseAvatar" styleClass="button-secondary" text="Cambiar avatar" />
+        <Label fx:id="avatarLabel" style="-fx-text-fill: #86868b; -fx-font-style: italic;" text="Sin avatar" />
     </HBox>
     
     <!-- Botones -->
     <HBox alignment="CENTER" spacing="10" style="-fx-padding: 20 0 0 0;">
-        <Button fx:id="btnGuardar" text="Guardar cambios" onAction="#saveProfile" styleClass="button-primary"/>
-        <Button onAction="#goBack" styleClass="button-secondary" text="Volver"/>
+        <Button fx:id="btnGuardar" onAction="#saveProfile" styleClass="button-primary" text="Guardar cambios" />
+        <Button onAction="#goBack" styleClass="button-secondary" text="Volver" />
     </HBox>
 </VBox>
