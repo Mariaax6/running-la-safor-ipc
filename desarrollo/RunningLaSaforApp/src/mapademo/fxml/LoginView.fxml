@@ -5,49 +5,35 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.LoginViewController">
-    
+<BorderPane stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.LoginViewController">
     <top>
-        <HBox alignment="CENTER_LEFT" styleClass="header-bar">
-            <Label text="Running la Safor" />
-        </HBox>
+        <AnchorPane styleClass="header-bar" prefHeight="50">
+            <Label text="Running la Safor" styleClass="header-title"
+                   AnchorPane.leftAnchor="30" AnchorPane.topAnchor="10"/>
+        </AnchorPane>
     </top>
-    
     <center>
         <StackPane styleClass="background-dark">
             <VBox alignment="CENTER" maxHeight="400.0" maxWidth="100.0" spacing="12.0" style="-fx-padding: 20 40 20 40;" styleClass="card-white">
-                
-                <!-- Título -->
                 <Label style="-fx-font-size: 20px; -fx-font-weight: bold;" text="Iniciar sesión" />
-                
-                <!-- Campo Nickname -->
                 <VBox spacing="2.0">
                     <Label text="Nickname" />
                     <TextField fx:id="nickField" promptText="ej: jpgarcia" />
                     <Label fx:id="nickErrorLabel" style="-fx-font-size: 11px; -fx-padding: 2 0 0 5; -fx-text-fill: #e74c3c;" text="" wrapText="true" />
                 </VBox>
-                
-                <!-- Campo Contraseña -->
                 <VBox spacing="2.0">
                     <Label text="Contraseña" />
                     <PasswordField fx:id="passwordField" promptText="ej: Pass123!" />
                     <Label fx:id="passErrorLabel" style="-fx-font-size: 11px; -fx-padding: 2 0 0 5; -fx-text-fill: #e74c3c;" text="" wrapText="true" />
                 </VBox>
-                
-                <!-- Error de login general -->
                 <Label fx:id="loginErrorLabel" alignment="CENTER" style="-fx-text-fill: #e74c3c; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 0 0 0;" text="" visible="false" wrapText="true" />
-                
-                <!-- Botón Entrar -->
                 <Button fx:id="btnLogin" maxWidth="Infinity" onAction="#handleLogin" styleClass="button-primary" text="Entrar" />
-                
-                <!-- Hipervínculo para registrarse -->
                 <Hyperlink onAction="#goToRegister" text="¿No tienes cuenta? Regístrate" />
-                
             </VBox>
         </StackPane>
     </center>

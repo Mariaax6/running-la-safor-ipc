@@ -14,19 +14,14 @@ import java.time.LocalDate;
 
 public class RegistroViewController {
 
-    // Campos de entrada
     @FXML private TextField nickField;
     @FXML private TextField emailField;
     @FXML private PasswordField passField;
     @FXML private DatePicker birthDatePicker;
-    
-    // Etiquetas de error
     @FXML private Label nickError;
     @FXML private Label emailError;
     @FXML private Label passError;
     @FXML private Label fechaError;
-    
-    // Botones y otros elementos
     @FXML private Button btnRegister;
     @FXML private Label avatarLabel;
     
@@ -35,11 +30,9 @@ public class RegistroViewController {
 
     @FXML
     private void initialize() {
-        // Inicialmente el botón de registro está deshabilitado
         btnRegister.setDisable(true);
         btnRegister.setStyle("-fx-opacity: 0.6;");
         
-        // Añadir listeners para validación en tiempo real
         nickField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         emailField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         passField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
@@ -64,6 +57,26 @@ public class RegistroViewController {
         }
     }
     
+    private void markFieldFecha(boolean isValid, boolean hasText) {
+        if (!hasText) {
+            fechaError.setVisible(false);
+            fechaError.setText("");
+            birthDatePicker.setStyle("");
+        } else {
+            if (!isValid) {
+                fechaError.setVisible(true);
+                fechaError.setText("❌ Debes tener más de 12 años");
+                fechaError.setStyle("-fx-text-fill: #e74c3c;");
+                birthDatePicker.setStyle("");
+            } else {
+                fechaError.setVisible(true);
+                fechaError.setText("✓ Edad válida");
+                fechaError.setStyle("-fx-text-fill: #4CAF50;");
+                birthDatePicker.setStyle("");
+            }
+        }
+    }
+    
     private void validateFields() {
         String nick = nickField.getText();
         String email = emailField.getText();
@@ -75,7 +88,6 @@ public class RegistroViewController {
         boolean passOk = User.checkPassword(pass);
         boolean fechaOk = birth != null && User.isOlderThan(birth, 12);
         
-        // Marcar campos con errores visuales y establecer mensajes
         if (!nick.isEmpty()) {
             if (!nickOk) {
                 nickError.setText("❌ 6-15 caracteres (letras, números, - o _)");
@@ -116,19 +128,11 @@ public class RegistroViewController {
         }
         
         if (birth != null) {
-            if (!fechaOk) {
-                fechaError.setText("❌ Debes tener más de 12 años");
-                markField(birthDatePicker, fechaError, false, true);
-            } else {
-                fechaError.setText("✓ Edad válida");
-                markField(birthDatePicker, fechaError, true, true);
-            }
+            markFieldFecha(fechaOk, true);
         } else {
-            fechaError.setText("");
-            markField(birthDatePicker, fechaError, false, false);
+            markFieldFecha(false, false);
         }
         
-        // Habilitar/deshabilitar botón de registro
         boolean allValid = nickOk && emailOk && passOk && fechaOk;
         btnRegister.setDisable(!allValid);
         if (allValid) {
@@ -160,7 +164,6 @@ public class RegistroViewController {
         String pass = passField.getText().trim();
         LocalDate birth = birthDatePicker.getValue();
 
-        // Validaciones finales por seguridad
         if (!User.checkNickName(nick)) {
             showAlert("Error de validación", "El nickname no es válido.");
             return;

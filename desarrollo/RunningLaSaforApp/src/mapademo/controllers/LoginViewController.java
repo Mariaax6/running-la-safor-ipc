@@ -22,15 +22,12 @@ public class LoginViewController {
 
     @FXML
     private void initialize() {
-        // Inicialmente el botón está deshabilitado
         btnLogin.setDisable(true);
         btnLogin.setStyle("-fx-opacity: 0.6;");
         
-        // Listeners para validación en tiempo real
         nickField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         
-        // Ocultar error de login al escribir
         nickField.textProperty().addListener((obs, oldVal, newVal) -> loginErrorLabel.setVisible(false));
         passwordField.textProperty().addListener((obs, oldVal, newVal) -> loginErrorLabel.setVisible(false));
     }
@@ -42,7 +39,6 @@ public class LoginViewController {
         boolean nickOk = User.checkNickName(nick);
         boolean passOk = User.checkPassword(pass);
         
-        // Validar nickname - solo mostrar error si es inválido
         if (!nick.isEmpty() && !nickOk) {
             nickErrorLabel.setText("❌ 6-15 caracteres (letras, números, - o _)");
             nickField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
@@ -55,7 +51,6 @@ public class LoginViewController {
             }
         }
         
-        // Validar contraseña - solo mostrar error si es inválida
         if (!pass.isEmpty() && !passOk) {
             passErrorLabel.setText("❌ 8-20 caracteres, con mayúscula, minúscula, número y símbolo");
             passwordField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
@@ -68,7 +63,6 @@ public class LoginViewController {
             }
         }
         
-        // Habilitar/deshabilitar botón
         boolean allValid = nickOk && passOk;
         btnLogin.setDisable(!allValid);
         if (allValid) {
@@ -95,11 +89,9 @@ public class LoginViewController {
                 showAlert("Error", "No se pudo cargar la ventana principal.");
             }
         } else {
-            // Mostrar error de login
             loginErrorLabel.setText("❌ Nickname o contraseña incorrectos");
             loginErrorLabel.setVisible(true);
             
-            // Poner ambos campos en rojo
             nickField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
             passwordField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
         }
