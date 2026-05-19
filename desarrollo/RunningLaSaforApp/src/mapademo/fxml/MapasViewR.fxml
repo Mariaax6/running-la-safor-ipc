@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.65" stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.MapasViewController">
+<SplitPane dividerPositions="0.65" stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.MapasViewRController">
     <items>
         <!-- Lado izquierdo: mapa + controles de zoom -->
         <VBox>
