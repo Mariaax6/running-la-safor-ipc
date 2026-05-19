@@ -14,19 +14,14 @@ import java.time.LocalDate;
 
 public class RegistroViewController {
 
-    // Campos de entrada
     @FXML private TextField nickField;
     @FXML private TextField emailField;
     @FXML private PasswordField passField;
     @FXML private DatePicker birthDatePicker;
-    
-    // Etiquetas de error
     @FXML private Label nickError;
     @FXML private Label emailError;
     @FXML private Label passError;
     @FXML private Label fechaError;
-    
-    // Botones y otros elementos
     @FXML private Button btnRegister;
     @FXML private Label avatarLabel;
     
@@ -35,11 +30,9 @@ public class RegistroViewController {
 
     @FXML
     private void initialize() {
-        // Inicialmente el botón de registro está deshabilitado
         btnRegister.setDisable(true);
         btnRegister.setStyle("-fx-opacity: 0.6;");
         
-        // Añadir listeners para validación en tiempo real
         nickField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         emailField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
         passField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
@@ -95,7 +88,6 @@ public class RegistroViewController {
         boolean passOk = User.checkPassword(pass);
         boolean fechaOk = birth != null && User.isOlderThan(birth, 12);
         
-        // Marcar campos con errores visuales y establecer mensajes
         if (!nick.isEmpty()) {
             if (!nickOk) {
                 nickError.setText("❌ 6-15 caracteres (letras, números, - o _)");
@@ -135,14 +127,12 @@ public class RegistroViewController {
             markField(passField, passError, false, false);
         }
         
-        // Fecha (solo mensaje, sin bordes)
         if (birth != null) {
             markFieldFecha(fechaOk, true);
         } else {
             markFieldFecha(false, false);
         }
         
-        // Habilitar/deshabilitar botón de registro
         boolean allValid = nickOk && emailOk && passOk && fechaOk;
         btnRegister.setDisable(!allValid);
         if (allValid) {
@@ -174,7 +164,6 @@ public class RegistroViewController {
         String pass = passField.getText().trim();
         LocalDate birth = birthDatePicker.getValue();
 
-        // Validaciones finales por seguridad
         if (!User.checkNickName(nick)) {
             showAlert("Error de validación", "El nickname no es válido.");
             return;
