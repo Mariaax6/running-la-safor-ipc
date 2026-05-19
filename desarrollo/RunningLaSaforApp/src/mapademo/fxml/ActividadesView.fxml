@@ -10,6 +10,10 @@
     <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
     <Label text="Mis Actividades" styleClass="title"/>
     <ListView fx:id="activityListView" VBox.vgrow="ALWAYS"/>
+    <HBox spacing="10.0">
+        <Button text="Ver actividad" onAction="#verActividad" styleClass="button-primary"/>
+        <Button text="Eliminar" onAction="#eliminarActividad" styleClass="button-secondary"/>
+    </HBox>
     <Button text="Acumulado del mes" onAction="#showMonthlyStats" styleClass="button-secondary"/>
     <Label fx:id="statsLabel" wrapText="true" style="-fx-background-color: white; -fx-padding: 16px; -fx-background-radius: 8px;"/>
 </VBox>
