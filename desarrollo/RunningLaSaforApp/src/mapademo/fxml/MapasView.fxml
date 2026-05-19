@@ -39,7 +39,7 @@
                   <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Anotaciones" />
                <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
                   <children>
-                     <Button mnemonicParsing="false" onAction="#borrar" text="Borrar" />
+                     <Button fx:id="borrarButton" mnemonicParsing="false" onAction="#borrar" text="Borrar" />
                   </children>
                </HBox>
             </children>

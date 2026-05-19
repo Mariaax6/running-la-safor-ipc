@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.scene.layout.VBox;
 import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.Annotation;
@@ -51,7 +52,7 @@ public class MapasViewController implements Initializable {
     @FXML private Pane mapPane;
     @FXML private ListView<Annotation> annotationList;
     @FXML private LineChart<Number, Number> elevationChart;
-    @FXML private NumberAxis xAxis, yAxis;
+    private NumberAxis xAxis;
 
     private SportActivityApp app = SportActivityApp.getInstance();
     private Activity currentActivity;
@@ -62,6 +63,8 @@ public class MapasViewController implements Initializable {
     private final Color START_COLOR = Color.GREEN;
     private final Color END_COLOR = Color.RED;
     private Circle highlightCircle; // punto resaltado en mapa al pasar ratón sobre gráfico
+    @FXML
+    private Button borrarButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -128,8 +131,12 @@ public class MapasViewController implements Initializable {
     }
 
     private void drawRoute() {
-        if (currentActivity == null || projection == null) return;
+        if (currentActivity == null || projection == null) {
+            System.out.println("drawRoute: abortado. activity=" + currentActivity + " projection=" + projection);
+            return;
+        }
         List<TrackPoint> points = currentActivity.getTrackPoints();
+        System.out.println("drawRoute: " + points.size() + " puntos");
         if (points.size() < 2) return;
 
         // Dibujar segmentos coloreados por velocidad
@@ -227,6 +234,7 @@ public class MapasViewController implements Initializable {
     }
 
    private void buildElevationProfile() {
+    xAxis = (NumberAxis) elevationChart.getXAxis();
     elevationChart.getData().clear();
     XYChart.Series<Number, Number> series = new XYChart.Series<>();
     double distance = 0;
@@ -412,5 +420,10 @@ public class MapasViewController implements Initializable {
 
         map_scrollpane.setHvalue(scrollH);
         map_scrollpane.setVvalue(scrollV);
+    }
+
+    @FXML
+    private void borrar(ActionEvent event) {
+        
     }
 }
