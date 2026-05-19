@@ -64,6 +64,26 @@ public class RegistroViewController {
         }
     }
     
+    private void markFieldFecha(boolean isValid, boolean hasText) {
+        if (!hasText) {
+            fechaError.setVisible(false);
+            fechaError.setText("");
+            birthDatePicker.setStyle("");
+        } else {
+            if (!isValid) {
+                fechaError.setVisible(true);
+                fechaError.setText("❌ Debes tener más de 12 años");
+                fechaError.setStyle("-fx-text-fill: #e74c3c;");
+                birthDatePicker.setStyle("");
+            } else {
+                fechaError.setVisible(true);
+                fechaError.setText("✓ Edad válida");
+                fechaError.setStyle("-fx-text-fill: #4CAF50;");
+                birthDatePicker.setStyle("");
+            }
+        }
+    }
+    
     private void validateFields() {
         String nick = nickField.getText();
         String email = emailField.getText();
@@ -115,17 +135,11 @@ public class RegistroViewController {
             markField(passField, passError, false, false);
         }
         
+        // Fecha (solo mensaje, sin bordes)
         if (birth != null) {
-            if (!fechaOk) {
-                fechaError.setText("❌ Debes tener más de 12 años");
-                markField(birthDatePicker, fechaError, false, true);
-            } else {
-                fechaError.setText("✓ Edad válida");
-                markField(birthDatePicker, fechaError, true, true);
-            }
+            markFieldFecha(fechaOk, true);
         } else {
-            fechaError.setText("");
-            markField(birthDatePicker, fechaError, false, false);
+            markFieldFecha(false, false);
         }
         
         // Habilitar/deshabilitar botón de registro
