@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.Group?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<SplitPane dividerPositions="0.65" xmlns="http://javafx.com/javafx/17"
-           xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="mapademo.controllers.MapasViewController"
-           stylesheets="@/resources/estilos.css">
+<SplitPane dividerPositions="0.65" stylesheets="@/resources/estilos.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mapademo.controllers.MapasViewController">
     <items>
         <!-- Lado izquierdo: mapa + controles de zoom -->
         <VBox>
-            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS"
-                        pannable="true" VBox.vgrow="ALWAYS"
-                        style="-fx-background-color: #d2d2d7;">
+            <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" pannable="true" style="-fx-background-color: #d2d2d7;" vbarPolicy="ALWAYS" VBox.vgrow="ALWAYS">
                 <content>
                     <Group fx:id="contentGroup">
                         <Group fx:id="zoomGroup">
-                            <Pane fx:id="mapPane"/>
+                            <Pane fx:id="mapPane" />
                         </Group>
                     </Group>
                 </content>
             </ScrollPane>
-            <HBox spacing="10" alignment="CENTER" VBox.vgrow="NEVER"
-                  style="-fx-background-color: white; -fx-padding: 8px;">
-                <Button text="−" onAction="#zoomOut" styleClass="button-secondary"/>
-                <Slider fx:id="zoom_slider" HBox.hgrow="ALWAYS" blockIncrement="0.1"/>
-                <Button text="+" onAction="#zoomIn" styleClass="button-secondary"/>
+            <HBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-padding: 8px;" VBox.vgrow="NEVER">
+                <Button onAction="#zoomOut" styleClass="button-secondary" text="−" />
+                <Slider fx:id="zoom_slider" blockIncrement="0.1" HBox.hgrow="ALWAYS" />
+                <Button onAction="#zoomIn" styleClass="button-secondary" text="+" />
             </HBox>
         </VBox>
         <!-- Lado derecho: anotaciones y perfil de desnivel -->
         <VBox spacing="16.0" style="-fx-padding: 24px;">
-            <Label text="Anotaciones" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-            <ListView fx:id="annotationList" VBox.vgrow="ALWAYS"/>
-            <Label text="Perfil de desnivel" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
-            <LineChart fx:id="elevationChart" title="Altitud vs Distancia" legendVisible="false"
-                       style="-fx-background-color: white; -fx-background-radius: 8px;">
+         <HBox>
+            <children>
+                  <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Anotaciones" />
+               <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+                  <children>
+                     <Button mnemonicParsing="false" onAction="#borrar" text="Borrar" />
+                  </children>
+               </HBox>
+            </children>
+         </HBox>
+            <ListView fx:id="annotationList" VBox.vgrow="ALWAYS" />
+            <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Perfil de desnivel" />
+            <LineChart fx:id="elevationChart" legendVisible="false" style="-fx-background-color: white; -fx-background-radius: 8px;" title="Altitud vs Distancia">
                 <xAxis>
-                    <NumberAxis label="Distancia (km)"/>
+                    <NumberAxis label="Distancia (km)" />
                 </xAxis>
                 <yAxis>
-                    <NumberAxis label="Altitud (m)"/>
+                    <NumberAxis label="Altitud (m)" />
                 </yAxis>
             </LineChart>
         </VBox>
