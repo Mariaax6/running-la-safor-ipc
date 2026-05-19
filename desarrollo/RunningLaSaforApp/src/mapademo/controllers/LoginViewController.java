@@ -1,25 +1,88 @@
 package mapademo.controllers;
+
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.User;
 import java.io.IOException;
 
 public class LoginViewController {
 
     @FXML private TextField nickField;
     @FXML private PasswordField passwordField;
+    @FXML private Label nickErrorLabel;
+    @FXML private Label passErrorLabel;
+    @FXML private Label loginErrorLabel;
+    @FXML private Button btnLogin;
 
     private SportActivityApp app = SportActivityApp.getInstance();
+
+    @FXML
+    private void initialize() {
+        // Inicialmente el botón está deshabilitado
+        btnLogin.setDisable(true);
+        btnLogin.setStyle("-fx-opacity: 0.6;");
+        
+        // Listeners para validación en tiempo real
+        nickField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
+        
+        // Ocultar error de login al escribir
+        nickField.textProperty().addListener((obs, oldVal, newVal) -> loginErrorLabel.setVisible(false));
+        passwordField.textProperty().addListener((obs, oldVal, newVal) -> loginErrorLabel.setVisible(false));
+    }
+    
+    private void validateFields() {
+        String nick = nickField.getText();
+        String pass = passwordField.getText();
+        
+        boolean nickOk = User.checkNickName(nick);
+        boolean passOk = User.checkPassword(pass);
+        
+        // Validar nickname - solo mostrar error si es inválido
+        if (!nick.isEmpty() && !nickOk) {
+            nickErrorLabel.setText("❌ 6-15 caracteres (letras, números, - o _)");
+            nickField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
+        } else {
+            nickErrorLabel.setText("");
+            if (!nick.isEmpty() && nickOk) {
+                nickField.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
+            } else if (nick.isEmpty()) {
+                nickField.setStyle("");
+            }
+        }
+        
+        // Validar contraseña - solo mostrar error si es inválida
+        if (!pass.isEmpty() && !passOk) {
+            passErrorLabel.setText("❌ 8-20 caracteres, con mayúscula, minúscula, número y símbolo");
+            passwordField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
+        } else {
+            passErrorLabel.setText("");
+            if (!pass.isEmpty() && passOk) {
+                passwordField.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
+            } else if (pass.isEmpty()) {
+                passwordField.setStyle("");
+            }
+        }
+        
+        // Habilitar/deshabilitar botón
+        boolean allValid = nickOk && passOk;
+        btnLogin.setDisable(!allValid);
+        if (allValid) {
+            btnLogin.setStyle("-fx-opacity: 1.0;");
+        } else {
+            btnLogin.setStyle("-fx-opacity: 0.6;");
+        }
+    }
 
     @FXML
     private void handleLogin() {
         String nick = nickField.getText().trim();
         String pass = passwordField.getText().trim();
+        
         if (app.login(nick, pass)) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MainView.fxml"));
@@ -32,7 +95,13 @@ public class LoginViewController {
                 showAlert("Error", "No se pudo cargar la ventana principal.");
             }
         } else {
-            showAlert("Error de autenticación", "Nickname o contraseña incorrectos.");
+            // Mostrar error de login
+            loginErrorLabel.setText("❌ Nickname o contraseña incorrectos");
+            loginErrorLabel.setVisible(true);
+            
+            // Poner ambos campos en rojo
+            nickField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
+            passwordField.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
         }
     }
 
@@ -54,6 +123,8 @@ public class LoginViewController {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+        alert.getDialogPane().getStyleClass().add("dialog-pane");
         alert.showAndWait();
     }
 }

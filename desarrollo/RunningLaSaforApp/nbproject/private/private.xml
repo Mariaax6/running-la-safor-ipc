@@ -6,14 +6,6 @@
         <group name="Entrega proyecto IPC">
             <file>file:/C:/Users/jsole/Desktop/2026/IPC/entrega/FINAL/POI_UPV/src/poiupv/FXMLDocumentController.java</file>
         </group>
-        <group>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/controllers/MapManagementController.java</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/controllers/MapasViewController.java</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/fxml/MapasView.fxml</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/resources/estilos.css</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/fxml/RegistroView.fxml</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/fxml/MainView.fxml</file>
-            <file>file:/C:/Users/clepm/Downloads/RunningLaSaforIPC/desarrollo/RunningLaSaforApp/src/mapademo/controllers/MainViewController.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
