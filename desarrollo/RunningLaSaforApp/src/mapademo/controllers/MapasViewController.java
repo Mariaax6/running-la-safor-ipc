@@ -45,11 +45,10 @@ public class MapasViewController implements Initializable {
 
     private final Color START_COLOR = Color.GREEN;
     private final Color END_COLOR = Color.RED;
-    private Circle highlightCircle; // punto resaltado en el mapa al pasar el ratón sobre el gráfico
+    private Circle highlightCircle;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configurar slider de zoom
         zoom_slider.setMin(0.5);
         zoom_slider.setMax(1.5);
         zoom_slider.setValue(1.0);
@@ -70,7 +69,6 @@ public class MapasViewController implements Initializable {
         mapPane.getChildren().clear();
         mapImageView = null;
 
-        // Obtener región de mapa
         currentRegion = currentActivity.getSuggestedMap();
         if (currentRegion == null) {
             currentRegion = app.findMapForActivity(currentActivity);
@@ -80,17 +78,16 @@ public class MapasViewController implements Initializable {
             return;
         }
 
-        
         System.out.println("Intentando cargar imagen desde: " + currentRegion.getImagePath());
         File imgFile = new File(currentRegion.getImagePath());
         System.out.println("¿Existe el archivo? " + imgFile.exists());
         System.out.println("Ruta absoluta: " + imgFile.getAbsolutePath());
-        
 
         if (!imgFile.exists()) {
             mapPane.getChildren().add(new Label("Imagen de mapa no encontrada."));
             return;
         }
+
         Image img = new Image(imgFile.toURI().toString());
         double W = img.getWidth();
         double H = img.getHeight();
@@ -115,7 +112,6 @@ public class MapasViewController implements Initializable {
         List<TrackPoint> points = currentActivity.getTrackPoints();
         if (points.size() < 2) return;
 
-        // Dibujar segmentos coloreados por velocidad
         for (int i = 1; i < points.size(); i++) {
             TrackPoint tp1 = points.get(i - 1);
             TrackPoint tp2 = points.get(i);
@@ -130,15 +126,16 @@ public class MapasViewController implements Initializable {
             mapPane.getChildren().add(line);
         }
 
-        // Punto inicio y fin
         TrackPoint start = currentActivity.getStartPoint();
         TrackPoint end = currentActivity.getEndPoint();
+
         if (start != null) {
             Point2D p = projection.project(start);
             Circle startCircle = new Circle(p.getX(), p.getY(), 7, START_COLOR);
             startCircle.setStroke(Color.BLACK);
             mapPane.getChildren().add(startCircle);
         }
+
         if (end != null) {
             Point2D p = projection.project(end);
             Circle endCircle = new Circle(p.getX(), p.getY(), 7, END_COLOR);
@@ -171,11 +168,13 @@ public class MapasViewController implements Initializable {
             case TEXT:
                 GeoPoint gp = ann.getGeoPoints().get(0);
                 Point2D pt = projection.project(gp);
+
                 if (ann.getType() == AnnotationType.POINT) {
                     Circle circle = new Circle(pt.getX(), pt.getY(), 5, color);
                     circle.setStroke(Color.BLACK);
                     mapPane.getChildren().add(circle);
                 }
+
                 if (ann.getText() != null && !ann.getText().isEmpty()) {
                     Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
                     text.setFill(color);
@@ -185,8 +184,10 @@ public class MapasViewController implements Initializable {
 
             case LINE:
                 if (ann.getGeoPoints().size() < 2) return;
+
                 Point2D p1 = projection.project(ann.getGeoPoints().get(0));
                 Point2D p2 = projection.project(ann.getGeoPoints().get(1));
+
                 Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
                 line.setStroke(color);
                 line.setStrokeWidth(width);
@@ -195,11 +196,15 @@ public class MapasViewController implements Initializable {
 
             case CIRCLE:
                 if (ann.getGeoPoints().size() < 2) return;
+
                 Point2D center = projection.project(ann.getGeoPoints().get(0));
                 Point2D border = projection.project(ann.getGeoPoints().get(1));
+
                 double radius = Math.sqrt(
                     Math.pow(border.getX() - center.getX(), 2) +
-                    Math.pow(border.getY() - center.getY(), 2));
+                    Math.pow(border.getY() - center.getY(), 2)
+                );
+
                 Circle c = new Circle(center.getX(), center.getY(), radius);
                 c.setStroke(color);
                 c.setStrokeWidth(width);
@@ -211,9 +216,11 @@ public class MapasViewController implements Initializable {
 
     private void buildElevationProfile() {
         elevationChart.getData().clear();
+
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         double distance = 0;
         TrackPoint prev = null;
+
         for (TrackPoint tp : currentActivity.getTrackPoints()) {
             if (prev != null) {
                 distance += prev.distanceTo(tp);
@@ -221,30 +228,34 @@ public class MapasViewController implements Initializable {
             prev = tp;
             series.getData().add(new XYChart.Data<>(distance / 1000.0, tp.getElevation()));
         }
+
         elevationChart.getData().add(series);
 
-        // Resaltar punto en el mapa al mover el ratón sobre el gráfico
         elevationChart.setOnMouseMoved(e -> {
             if (highlightCircle != null) {
                 mapPane.getChildren().remove(highlightCircle);
                 highlightCircle = null;
             }
+
             double mouseX = xAxis.getValueForDisplay(e.getX()).doubleValue();
             double minDist = Double.MAX_VALUE;
             TrackPoint closest = null;
             TrackPoint prevPoint = null;
             double dist = 0;
+
             for (TrackPoint tp : currentActivity.getTrackPoints()) {
                 if (prevPoint != null) {
                     dist += prevPoint.distanceTo(tp);
                 }
                 prevPoint = tp;
+
                 double d = Math.abs(mouseX - dist / 1000.0);
                 if (d < minDist) {
                     minDist = d;
                     closest = tp;
                 }
             }
+
             if (closest != null) {
                 Point2D pt = projection.project(closest);
                 highlightCircle = new Circle(pt.getX(), pt.getY(), 5, Color.YELLOW);
@@ -257,24 +268,28 @@ public class MapasViewController implements Initializable {
     private void setupMapClickHandler() {
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
-                // Menú contextual para añadir anotación (código existente)
                 final double clickX = e.getX();
                 final double clickY = e.getY();
                 GeoPoint geo = projection.unproject(clickX, clickY);
 
                 ContextMenu menu = new ContextMenu();
+
                 MenuItem pointItem = new MenuItem("Añadir punto");
                 pointItem.setOnAction(ev -> addAnnotation(AnnotationType.POINT, geo));
+
                 MenuItem textItem = new MenuItem("Añadir texto");
                 textItem.setOnAction(ev -> addAnnotation(AnnotationType.TEXT, geo));
+
                 MenuItem lineItem = new MenuItem("Añadir línea (clic para segundo punto)");
                 lineItem.setOnAction(ev -> startLineAnnotation(geo));
+
                 MenuItem circleItem = new MenuItem("Añadir círculo (clic para borde)");
                 circleItem.setOnAction(ev -> startCircleAnnotation(geo));
+
                 menu.getItems().addAll(pointItem, textItem, lineItem, circleItem);
                 menu.show(mapPane, e.getScreenX(), e.getScreenY());
+
             } else if (e.getButton() == MouseButton.PRIMARY) {
-                // Clic izquierdo: mostrar altitud y distancia
                 GeoPoint clicked = projection.unproject(e.getX(), e.getY());
                 TrackPoint nearest = findNearestTrackPoint(clicked);
                 if (nearest != null) {
@@ -290,26 +305,30 @@ public class MapasViewController implements Initializable {
 
         TrackPoint nearest = null;
         double minDist = Double.MAX_VALUE;
+
         for (TrackPoint tp : points) {
             GeoPoint tpGeo = new GeoPoint(tp.getLatitude(), tp.getLongitude());
             double d = GeoUtils.distance(target, tpGeo);
+
             if (d < minDist) {
                 minDist = d;
                 nearest = tp;
             }
         }
+
         return nearest;
     }
 
     private void highlightElevationPoint(TrackPoint tp) {
-        // Calcular distancia acumulada hasta ese punto
         double dist = 0;
         TrackPoint prev = null;
+
         for (TrackPoint p : currentActivity.getTrackPoints()) {
             if (prev != null) dist += prev.distanceTo(p);
             prev = p;
             if (p == tp) break;
         }
+
         double alt = tp.getElevation();
         altitudeInfoLabel.setText(String.format("Altitud: %.0f m  |  Distancia: %.2f km", alt, dist / 1000.0));
     }
@@ -318,11 +337,13 @@ public class MapasViewController implements Initializable {
         Dialog<Annotation> dialog = new Dialog<>();
         dialog.setTitle("Nueva anotación");
         dialog.setHeaderText("Introduce los detalles");
+
         ButtonType okButton = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButton, ButtonType.CANCEL);
 
         TextField textField = new TextField();
         textField.setPromptText("Texto (opcional)");
+
         TextField colorField = new TextField("#FF0000");
         colorField.setPromptText("Color CSS (ej. #FF0000)");
 
@@ -337,6 +358,7 @@ public class MapasViewController implements Initializable {
         });
 
         Optional<Annotation> result = dialog.showAndWait();
+
         result.ifPresent(ann -> {
             Annotation saved = app.addAnnotation(currentActivity, ann);
             if (saved != null) {
@@ -369,17 +391,20 @@ public class MapasViewController implements Initializable {
     private void updateAnnotationList() {
         annotationList.getItems().clear();
         annotationList.getItems().addAll(currentActivity.getAnnotations());
+
         annotationList.setCellFactory(lv -> new ListCell<Annotation>() {
             @Override
             protected void updateItem(Annotation ann, boolean empty) {
                 super.updateItem(ann, empty);
-                if (empty || ann == null) setText(null);
-                else setText(ann.getType() + " - " + ann.getText());
+                if (empty || ann == null) {
+                    setText(null);
+                } else {
+                    setText(ann.getType() + " - " + ann.getText());
+                }
             }
         });
     }
 
-    // Métodos de zoom
     @FXML
     private void zoomIn() {
         double val = zoom_slider.getValue() + 0.1;
@@ -397,8 +422,10 @@ public class MapasViewController implements Initializable {
     private void zoom(double scaleValue) {
         double scrollH = map_scrollpane.getHvalue();
         double scrollV = map_scrollpane.getVvalue();
+
         zoomGroup.setScaleX(scaleValue);
         zoomGroup.setScaleY(scaleValue);
+
         map_scrollpane.setHvalue(scrollH);
         map_scrollpane.setVvalue(scrollV);
     }
