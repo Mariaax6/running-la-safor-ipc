@@ -12,7 +12,7 @@ public class Poi {
         this.position = new Point2D(x, y);
     }
 
-    // Constructor vacío (opcional)
+   
     public Poi() {
         this.code = "";
         this.position = new Point2D(0, 0);
