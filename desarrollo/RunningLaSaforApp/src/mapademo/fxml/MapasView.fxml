@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -11,7 +12,7 @@
            fx:controller="mapademo.controllers.MapasViewController"
            stylesheets="@/resources/estilos.css">
     <items>
-        <!-- Lado izquierdo: mapa + controles de zoom -->
+      
         <VBox>
             <ScrollPane fx:id="map_scrollpane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS"
                         pannable="true" VBox.vgrow="ALWAYS"
@@ -31,23 +32,36 @@
                 <Button text="+" onAction="#zoomIn" styleClass="button-secondary"/>
             </HBox>
         </VBox>
-        <!-- Lado derecho: anotaciones y perfil de desnivel -->
+        
         <VBox spacing="16.0" style="-fx-padding: 24px;">
             <Label text="Anotaciones" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
             <ListView fx:id="annotationList" VBox.vgrow="ALWAYS"/>
             <Label text="Perfil de desnivel" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
             <LineChart fx:id="elevationChart" title="Altitud vs Distancia" legendVisible="false"
-                       style="-fx-background-color: white; -fx-background-radius: 8px;">
-                <xAxis>
-                    <NumberAxis label="Distancia (km)"/>
-                </xAxis>
-                <yAxis>
-                    <NumberAxis label="Altitud (m)"/>
-                </yAxis>
-            </LineChart>
-            <!-- Etiqueta para mostrar altitud y distancia al hacer clic en el mapa -->
+           style="-fx-background-color: white; -fx-background-radius: 8px;">
+    <xAxis>
+        <NumberAxis fx:id="xAxis" label="Distancia (km)"/>
+    </xAxis>
+    <yAxis>
+        <NumberAxis fx:id="yAxis" label="Altitud (m)"/>
+    </yAxis>
+</LineChart>
+            
             <Label fx:id="altitudeInfoLabel" text="Altitud: -- m  |  Distancia: -- km"
                    style="-fx-font-size: 13px; -fx-text-fill: #555; -fx-padding: 4 0 0 0;"/>
+
+            
+            <VBox spacing="8.0" style="-fx-padding: 16px 0 0 0;">
+                <Label text="Estadísticas" style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                <Label fx:id="lblDistancia" text="Distancia: --"/>
+                <Label fx:id="lblDuracion" text="Duración: --"/>
+                <Label fx:id="lblVelocidadMedia" text="Velocidad media: --"/>
+                <Label fx:id="lblRitmoMedio" text="Ritmo medio: --"/>
+                <Label fx:id="lblDesnivelPositivo" text="Desnivel positivo: --"/>
+                <Label fx:id="lblDesnivelNegativo" text="Desnivel negativo: --"/>
+                <Label fx:id="lblAltitudMin" text="Altitud mínima: --"/>
+                <Label fx:id="lblAltitudMax" text="Altitud máxima: --"/>
+            </VBox>
         </VBox>
     </items>
 </SplitPane>
