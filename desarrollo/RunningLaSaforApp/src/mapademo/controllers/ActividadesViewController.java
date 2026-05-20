@@ -46,9 +46,9 @@ public class ActividadesViewController {
         activityListView.getSelectionModel().selectedItemProperty().addListener((obs, old, act) -> {
             if (act != null) {
                 try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MapasViewR.fxml"));
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MapasView.fxml"));
                     Parent view = loader.load();
-                    MapasViewRController mapCtrl = loader.getController();
+                    MapasViewController mapCtrl = loader.getController();
                     mapCtrl.setActivity(act);
                     // Obtenemos el BorderPane raíz del Main.fxml (estamos dentro del centro)
                     BorderPane mainPane = (BorderPane) activityListView.getScene().getRoot();
