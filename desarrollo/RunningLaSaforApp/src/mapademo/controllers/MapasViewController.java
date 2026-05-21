@@ -64,8 +64,9 @@ public class MapasViewController implements Initializable {
     private final Color END_COLOR = Color.RED;
     private Circle highlightCircle; // punto resaltado en mapa al pasar ratón sobre gráfico
     
-    private java.util.Map<Annotation, List<javafx.scene.Node>> annotationNodes = new java.util.HashMap<>();
+    private java.util.Map<Integer, List<javafx.scene.Node>> annotationNodes = new java.util.HashMap<>();
     private javafx.scene.Node previewNode = null;
+    
     
     @FXML
     private Button borrarButton;
@@ -282,105 +283,108 @@ public class MapasViewController implements Initializable {
     }
 
     private void drawAnnotation(Annotation ann) {
-    if (ann.getGeoPoints().isEmpty()) return;
-    Color color = Color.web(ann.getColor());
-    double width = ann.getStrokeWidth();
-    List<javafx.scene.Node> nodes = new ArrayList<>();
+        if (ann.getGeoPoints().isEmpty()) return;
+        Color color = Color.web(ann.getColor());
+        double width = ann.getStrokeWidth();
+        List<javafx.scene.Node> nodes = new ArrayList<>();
 
-    switch (ann.getType()) {
-        case POINT:
-        case TEXT:
-            GeoPoint gp = ann.getGeoPoints().get(0);
-            Point2D pt = projection.project(gp);
-            if (ann.getType() == AnnotationType.POINT) {
-                Circle circle = new Circle(pt.getX(), pt.getY(), 5, color);
-                circle.setStroke(Color.BLACK);
-                mapPane.getChildren().add(circle);
-                nodes.add(circle);
-            }
-            if (ann.getText() != null && !ann.getText().isEmpty()) {
-                Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
-                text.setFill(color);
-                mapPane.getChildren().add(text);
-                nodes.add(text);
-            }
-            break;
+        switch (ann.getType()) {
+            case POINT:
+            case TEXT:
+                GeoPoint gp = ann.getGeoPoints().get(0);
+                Point2D pt = projection.project(gp);
+                if (ann.getType() == AnnotationType.POINT) {
+                    Circle circle = new Circle(pt.getX(), pt.getY(), 5, color);
+                    circle.setStroke(Color.BLACK);
+                    mapPane.getChildren().add(circle);
+                    nodes.add(circle);
+                }
+                if (ann.getText() != null && !ann.getText().isEmpty()) {
+                    Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
+                    text.setFill(color);
+                    mapPane.getChildren().add(text);
+                    nodes.add(text);
+                }
+                break;
 
-        case LINE:
-            if (ann.getGeoPoints().size() < 2) return;
-            Point2D p1 = projection.project(ann.getGeoPoints().get(0));
-            Point2D p2 = projection.project(ann.getGeoPoints().get(1));
-            Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-            line.setStroke(color);
-            line.setStrokeWidth(width);
-            mapPane.getChildren().add(line);
-            nodes.add(line);
-            break;
+            case LINE:
+                if (ann.getGeoPoints().size() < 2) return;
+                Point2D p1 = projection.project(ann.getGeoPoints().get(0));
+                Point2D p2 = projection.project(ann.getGeoPoints().get(1));
+                Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+                line.setStroke(color);
+                line.setStrokeWidth(width);
+                mapPane.getChildren().add(line);
+                nodes.add(line);
+                break;
 
-        case CIRCLE:
-            if (ann.getGeoPoints().size() < 2) return;
-            Point2D center = projection.project(ann.getGeoPoints().get(0));
-            Point2D border = projection.project(ann.getGeoPoints().get(1));
-            double radius = Math.sqrt(
-                Math.pow(border.getX() - center.getX(), 2) +
-                Math.pow(border.getY() - center.getY(), 2));
-            Circle c = new Circle(center.getX(), center.getY(), radius);
-            c.setStroke(color);
-            c.setStrokeWidth(width);
-            c.setFill(Color.TRANSPARENT);
-            mapPane.getChildren().add(c);
-            nodes.add(c);
-            break;
+            case CIRCLE:
+                if (ann.getGeoPoints().size() < 2) return;
+                Point2D center = projection.project(ann.getGeoPoints().get(0));
+                Point2D border = projection.project(ann.getGeoPoints().get(1));
+                double radius = Math.sqrt(
+                    Math.pow(border.getX() - center.getX(), 2) +
+                    Math.pow(border.getY() - center.getY(), 2));
+                Circle c = new Circle(center.getX(), center.getY(), radius);
+                c.setStroke(color);
+                c.setStrokeWidth(width);
+                c.setFill(Color.TRANSPARENT);
+                mapPane.getChildren().add(c);
+                nodes.add(c);
+                break;
+        }
+
+       annotationNodes.put(ann.hashCode(), nodes);
+       
+       System.out.println("put hashCode: " + ann.hashCode() + " ann: " + ann);
+        annotationNodes.put(ann.hashCode(), nodes);
     }
 
-    annotationNodes.put(ann, nodes); // <-- registrar nodos
-}
-
-   private void buildElevationProfile() {
-    xAxis = (NumberAxis) elevationChart.getXAxis();
-    elevationChart.getData().clear();
-    XYChart.Series<Number, Number> series = new XYChart.Series<>();
-    double distance = 0;
-    TrackPoint prev = null;
-    for (TrackPoint tp : currentActivity.getTrackPoints()) {
-        if (prev != null) {
-            distance += prev.distanceTo(tp);
-        }
-        prev = tp;
-        series.getData().add(new XYChart.Data<>(distance / 1000.0, tp.getElevation()));
-    }
-    elevationChart.getData().add(series);
-
-    // --- aquí mantienes tu código de resaltado con el ratón ---
-    elevationChart.setOnMouseMoved(e -> {
-        if (highlightCircle != null) {
-            mapPane.getChildren().remove(highlightCircle);
-            highlightCircle = null;
-        }
-        double mouseX = xAxis.getValueForDisplay(e.getX()).doubleValue();
-        double minDist = Double.MAX_VALUE;
-        TrackPoint closest = null;
-        TrackPoint prevPoint = null;   // variable local a la lambda
-        double dist = 0;
+    private void buildElevationProfile() {
+        xAxis = (NumberAxis) elevationChart.getXAxis();
+        elevationChart.getData().clear();
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        double distance = 0;
+        TrackPoint prev = null;
         for (TrackPoint tp : currentActivity.getTrackPoints()) {
-            if (prevPoint != null) {
-                dist += prevPoint.distanceTo(tp);
+            if (prev != null) {
+                distance += prev.distanceTo(tp);
             }
-            prevPoint = tp;
-            double d = Math.abs(mouseX - dist / 1000.0);
-            if (d < minDist) {
-                minDist = d;
-                closest = tp;
+            prev = tp;
+            series.getData().add(new XYChart.Data<>(distance / 1000.0, tp.getElevation()));
+        }
+        elevationChart.getData().add(series);
+
+        // --- aquí mantienes tu código de resaltado con el ratón ---
+        elevationChart.setOnMouseMoved(e -> {
+            if (highlightCircle != null) {
+                mapPane.getChildren().remove(highlightCircle);
+                highlightCircle = null;
             }
-        }
-        if (closest != null) {
-            Point2D pt = projection.project(closest);
-            highlightCircle = new Circle(pt.getX(), pt.getY(), 5, Color.YELLOW);
-            highlightCircle.setStroke(Color.BLACK);
-            mapPane.getChildren().add(highlightCircle);
-        }
-    });
-}
+            double mouseX = xAxis.getValueForDisplay(e.getX()).doubleValue();
+            double minDist = Double.MAX_VALUE;
+            TrackPoint closest = null;
+            TrackPoint prevPoint = null;   // variable local a la lambda
+            double dist = 0;
+            for (TrackPoint tp : currentActivity.getTrackPoints()) {
+                if (prevPoint != null) {
+                    dist += prevPoint.distanceTo(tp);
+                }
+                prevPoint = tp;
+                double d = Math.abs(mouseX - dist / 1000.0);
+                if (d < minDist) {
+                    minDist = d;
+                    closest = tp;
+                }
+            }
+            if (closest != null) {
+                Point2D pt = projection.project(closest);
+                highlightCircle = new Circle(pt.getX(), pt.getY(), 5, Color.YELLOW);
+                highlightCircle.setStroke(Color.BLACK);
+                mapPane.getChildren().add(highlightCircle);
+            }
+        });
+    }
    
     private ContextMenu activeContextMenu;
 
@@ -461,15 +465,26 @@ public class MapasViewController implements Initializable {
         Optional<Annotation> result = dialog.showAndWait();
         result.ifPresent(ann -> {
             Annotation saved = app.addAnnotation(currentActivity, ann);
-            if (saved != null) drawAnnotation(saved);
+            if (saved != null) drawAnnotation(saved); // saved queda en annotationNodes
 
-            // Recargar currentActivity desde la BD para que getAnnotations() esté actualizado
             this.currentActivity = app.getUserActivities().stream()
                 .filter(a -> a.getId() == currentActivity.getId())
                 .findFirst()
                 .orElse(currentActivity);
 
             updateAnnotationList();
+
+            int lastIndex = annotationList.getItems().size() - 1;
+            if (lastIndex >= 0) {
+                annotationList.getSelectionModel().clearSelection();
+                annotationList.getSelectionModel().select(lastIndex);
+                Annotation toFocus = saved != null ? saved : ann;
+                System.out.println("saved: " + saved);
+                System.out.println("en annotationNodes: " + annotationNodes.containsKey(saved));
+                System.out.println("toFocus: " + toFocus);
+                System.out.println("en annotationNodes: " + annotationNodes.containsKey(toFocus));
+                javafx.application.Platform.runLater(() -> blinkAnnotation(toFocus));
+            }
         });
     }
 
@@ -536,9 +551,18 @@ public class MapasViewController implements Initializable {
     }
 
     private void updateAnnotationList() {
-        List<Annotation> anns = new ArrayList<>(currentActivity.getAnnotations());
-        annotationList.getItems().clear();
-        annotationList.setItems(javafx.collections.FXCollections.observableArrayList(anns));
+        List<Annotation> current = new ArrayList<>(currentActivity.getAnnotations());
+
+        // Solo añadir los que no están ya (comparando por hashCode de los existentes)
+        if (annotationList.getItems().size() < current.size()) {
+            // Hay elementos nuevos, añadir solo el último
+            annotationList.getItems().add(current.get(current.size() - 1));
+        } else if (annotationList.getItems().size() > current.size()) {
+            // Se borró uno, recargar todo desde annotationNodes (los objetos correctos)
+            // En este caso no importa porque borrar no necesita parpadeo
+            annotationList.getItems().setAll(current);
+        }
+        // Si son iguales, no hacer nada
     }
     // Métodos de zoom
     @FXML
@@ -571,7 +595,7 @@ public class MapasViewController implements Initializable {
         Annotation selected = annotationList.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
-        List<javafx.scene.Node> nodes = annotationNodes.remove(selected);
+        List<javafx.scene.Node> nodes = annotationNodes.remove(selected.hashCode());
         if (nodes != null) {
             mapPane.getChildren().removeAll(nodes);
         }
@@ -582,7 +606,6 @@ public class MapasViewController implements Initializable {
     
     private void focusAnnotationOnMap(Annotation ann) {
         if (ann.getGeoPoints().isEmpty()) return;
-
         Point2D pt = projection.project(ann.getGeoPoints().get(0));
 
         double contentWidth  = zoomGroup.getBoundsInParent().getWidth();
@@ -600,36 +623,33 @@ public class MapasViewController implements Initializable {
         targetH = Math.max(0, Math.min(1, targetH));
         targetV = Math.max(0, Math.min(1, targetV));
 
-        // Animación suave del scroll
-        double startH = map_scrollpane.getHvalue();
-        double startV = map_scrollpane.getVvalue();
-        double finalH = targetH;
-        double finalV = targetV;
-
         javafx.animation.Timeline timeline = new javafx.animation.Timeline();
         timeline.getKeyFrames().add(new javafx.animation.KeyFrame(
             javafx.util.Duration.millis(400),
-            new javafx.animation.KeyValue(map_scrollpane.hvalueProperty(), finalH, 
+            new javafx.animation.KeyValue(map_scrollpane.hvalueProperty(), targetH,
                 javafx.animation.Interpolator.EASE_BOTH),
-            new javafx.animation.KeyValue(map_scrollpane.vvalueProperty(), finalV, 
+            new javafx.animation.KeyValue(map_scrollpane.vvalueProperty(), targetV,
                 javafx.animation.Interpolator.EASE_BOTH)
         ));
+        // Parpadeo siempre al terminar el scroll, haya habido movimiento o no
+        timeline.setOnFinished(e -> javafx.application.Platform.runLater(() -> blinkAnnotation(ann)));
         timeline.play();
+    }
 
-        // Parpadeo al llegar
-        timeline.setOnFinished(e -> {
-            List<javafx.scene.Node> nodes = annotationNodes.get(ann);
-            if (nodes != null) {
-                nodes.forEach(n -> {
-                    javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
-                        javafx.util.Duration.millis(200), n);
-                    ft.setFromValue(1.0);
-                    ft.setToValue(0.2);
-                    ft.setCycleCount(4);
-                    ft.setAutoReverse(true);
-                    ft.play();
-                });
-            }
-        });
+    private void blinkAnnotation(Annotation ann) {
+        System.out.println("blink hashCode: " + ann.hashCode());
+        System.out.println("claves en annotationNodes: " + annotationNodes.keySet());
+        List<javafx.scene.Node> nodes = annotationNodes.get(ann.hashCode());
+        if (nodes != null) {
+            nodes.forEach(n -> {
+                javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
+                    javafx.util.Duration.millis(200), n);
+                ft.setFromValue(1.0);
+                ft.setToValue(0.2);
+                ft.setCycleCount(4);
+                ft.setAutoReverse(true);
+                ft.play();
+            });
+        }
     }
 }
