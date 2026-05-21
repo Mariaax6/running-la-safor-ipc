@@ -98,11 +98,27 @@ public class MapasViewController implements Initializable {
         annotationList.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+                    javafx.scene.Node node = e.getPickResult().getIntersectedNode();
+                    // Subir por el árbol hasta encontrar el borrarButton
+                    javafx.scene.Node n = node;
+                    while (n != null) {
+                        if (n == borrarButton) return; // clic en el botón, no deseleccionar
+                        n = n.getParent();
+                    }
                     if (!annotationList.getBoundsInParent().contains(
                             annotationList.getParent().sceneToLocal(e.getSceneX(), e.getSceneY()))) {
                         annotationList.getSelectionModel().clearSelection();
                     }
                 });
+            }
+        });
+        
+        annotationList.setCellFactory(lv -> new ListCell<Annotation>() {
+            @Override
+            protected void updateItem(Annotation ann, boolean empty) {
+                super.updateItem(ann, empty);
+                if (empty || ann == null) setText(null);
+                else setText(ann.getType() + " - " + ann.getText());
             }
         });
     }
@@ -393,10 +409,15 @@ public class MapasViewController implements Initializable {
         Optional<Annotation> result = dialog.showAndWait();
         result.ifPresent(ann -> {
             Annotation saved = app.addAnnotation(currentActivity, ann);
-            if (saved != null) {
-                drawAnnotation(saved);
-                updateAnnotationList();
-            }
+            if (saved != null) drawAnnotation(saved);
+
+            // Recargar currentActivity desde la BD para que getAnnotations() esté actualizado
+            this.currentActivity = app.getUserActivities().stream()
+                .filter(a -> a.getId() == currentActivity.getId())
+                .findFirst()
+                .orElse(currentActivity);
+
+            updateAnnotationList();
         });
     }
 
@@ -423,21 +444,10 @@ public class MapasViewController implements Initializable {
     }
 
     private void updateAnnotationList() {
+        List<Annotation> anns = new ArrayList<>(currentActivity.getAnnotations());
         annotationList.getItems().clear();
-        annotationList.getItems().addAll(currentActivity.getAnnotations());
-        annotationList.setCellFactory(lv -> new ListCell<Annotation>() {
-            @Override
-            protected void updateItem(Annotation ann, boolean empty) {
-                super.updateItem(ann, empty);
-                if (empty || ann == null) {
-                    setText(null);
-                } else {
-                    setText(ann.getType() + " - " + ann.getText());
-                }
-            }
-        });
+        annotationList.setItems(javafx.collections.FXCollections.observableArrayList(anns));
     }
-
     // Métodos de zoom
     @FXML
     private void zoomIn() {
@@ -467,7 +477,7 @@ public class MapasViewController implements Initializable {
     @FXML
     private void borrar(ActionEvent event) {
         Annotation selected = annotationList.getSelectionModel().getSelectedItem();
-        if (selected == null) return; // solo por seguridad
+        if (selected == null) return;
 
         List<javafx.scene.Node> nodes = annotationNodes.remove(selected);
         if (nodes != null) {
@@ -475,6 +485,6 @@ public class MapasViewController implements Initializable {
         }
 
         app.removeAnnotation(selected);
-        annotationList.getItems().remove(selected);
+        updateAnnotationList(); // <-- en lugar de annotationList.getItems().remove(selected)
     }
 }
