@@ -65,6 +65,7 @@ public class MapasViewController implements Initializable {
     private Circle highlightCircle; // punto resaltado en mapa al pasar ratón sobre gráfico
     
     private java.util.Map<Annotation, List<javafx.scene.Node>> annotationNodes = new java.util.HashMap<>();
+    private javafx.scene.Node previewNode = null;
     
     @FXML
     private Button borrarButton;
@@ -381,6 +382,12 @@ public class MapasViewController implements Initializable {
     private ContextMenu activeContextMenu;
 
     private void setupMapClickHandler() {
+        // Limpiar preview si había uno pendiente
+        if (previewNode != null) {
+            mapPane.getChildren().remove(previewNode);
+            previewNode = null;
+        }
+        mapPane.setOnMouseMoved(null);
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
                 e.consume();
@@ -464,20 +471,60 @@ public class MapasViewController implements Initializable {
     }
 
     private void startLineAnnotation(GeoPoint start) {
-        // Segundo clic para completar línea
+        Point2D p1 = projection.project(start);
+
+        // Crear línea de preview
+        Line preview = new Line(p1.getX(), p1.getY(), p1.getX(), p1.getY());
+        preview.setStroke(Color.GRAY);
+        preview.setStrokeWidth(2);
+        preview.getStrokeDashArray().addAll(6.0, 4.0); // línea discontinua
+        mapPane.getChildren().add(preview);
+        previewNode = preview;
+
+        mapPane.setOnMouseMoved(e -> {
+            preview.setEndX(e.getX());
+            preview.setEndY(e.getY());
+        });
+
         mapPane.setOnMouseClicked(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) { // Podría ser izquierdo
+            if (e.getButton() == MouseButton.PRIMARY) {
+                // Limpiar preview y listener de movimiento
+                mapPane.getChildren().remove(previewNode);
+                previewNode = null;
+                mapPane.setOnMouseMoved(null);
+
                 GeoPoint end = projection.unproject(e.getX(), e.getY());
                 addAnnotation(AnnotationType.LINE, start, end);
-                // Restaurar el manejador de clics original
                 setupMapClickHandler();
             }
         });
     }
 
     private void startCircleAnnotation(GeoPoint center) {
+        Point2D pc = projection.project(center);
+
+        // Crear círculo de preview
+        Circle preview = new Circle(pc.getX(), pc.getY(), 1);
+        preview.setStroke(Color.GRAY);
+        preview.setStrokeWidth(2);
+        preview.getStrokeDashArray().addAll(6.0, 4.0);
+        preview.setFill(Color.TRANSPARENT);
+        mapPane.getChildren().add(preview);
+        previewNode = preview;
+
+        mapPane.setOnMouseMoved(e -> {
+            double radius = Math.sqrt(
+                Math.pow(e.getX() - pc.getX(), 2) +
+                Math.pow(e.getY() - pc.getY(), 2));
+            preview.setRadius(radius);
+        });
+
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.PRIMARY) {
+                mapPane.getChildren().remove(previewNode);
+                previewNode = null;
+                mapPane.setOnMouseMoved(null);
+
                 GeoPoint border = projection.unproject(e.getX(), e.getY());
                 addAnnotation(AnnotationType.CIRCLE, center, border);
                 setupMapClickHandler();
