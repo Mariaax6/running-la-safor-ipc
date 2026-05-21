@@ -66,6 +66,8 @@ public class MapasViewController implements Initializable {
     
     private java.util.Map<Integer, List<javafx.scene.Node>> annotationNodes = new java.util.HashMap<>();
     private javafx.scene.Node previewNode = null;
+    private final javafx.collections.ObservableList<Annotation> annotationItems = 
+    javafx.collections.FXCollections.observableArrayList();
     
     
     @FXML
@@ -80,6 +82,7 @@ public class MapasViewController implements Initializable {
 
         // Listener de selección registrado una sola vez
         borrarButton.setDisable(true);
+        annotationList.setItems(annotationItems);
         annotationList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             borrarButton.setDisable(newVal == null);
             if (newVal != null && projection != null) {
@@ -171,14 +174,14 @@ public class MapasViewController implements Initializable {
 
     public void setActivity(Activity act) {
         this.currentActivity = act;
+        annotationItems.clear();
         loadMap();
         drawRoute();
-        drawAnnotations();
+        drawAnnotations(); // drawAnnotations ya llena annotationNodes
         buildElevationProfile();
         setupMapClickHandler();
-        updateAnnotationList();
-        
-        // Centrar el mapa tras el layout
+        annotationItems.addAll(currentActivity.getAnnotations()); // poblar con los objetos iniciales
+
         javafx.application.Platform.runLater(() -> {
             map_scrollpane.setHvalue(0.5);
             map_scrollpane.setVvalue(0.5);
@@ -465,25 +468,11 @@ public class MapasViewController implements Initializable {
         Optional<Annotation> result = dialog.showAndWait();
         result.ifPresent(ann -> {
             Annotation saved = app.addAnnotation(currentActivity, ann);
-            if (saved != null) drawAnnotation(saved); // saved queda en annotationNodes
-
-            this.currentActivity = app.getUserActivities().stream()
-                .filter(a -> a.getId() == currentActivity.getId())
-                .findFirst()
-                .orElse(currentActivity);
-
-            updateAnnotationList();
-
-            int lastIndex = annotationList.getItems().size() - 1;
-            if (lastIndex >= 0) {
-                annotationList.getSelectionModel().clearSelection();
-                annotationList.getSelectionModel().select(lastIndex);
-                Annotation toFocus = saved != null ? saved : ann;
-                System.out.println("saved: " + saved);
-                System.out.println("en annotationNodes: " + annotationNodes.containsKey(saved));
-                System.out.println("toFocus: " + toFocus);
-                System.out.println("en annotationNodes: " + annotationNodes.containsKey(toFocus));
-                javafx.application.Platform.runLater(() -> blinkAnnotation(toFocus));
+            if (saved != null) {
+                drawAnnotation(saved);
+                annotationItems.add(saved);
+                annotationList.getSelectionModel().select(saved);
+                javafx.application.Platform.runLater(() -> blinkAnnotation(saved));
             }
         });
     }
@@ -549,21 +538,7 @@ public class MapasViewController implements Initializable {
             }
         });
     }
-
-    private void updateAnnotationList() {
-        List<Annotation> current = new ArrayList<>(currentActivity.getAnnotations());
-
-        // Solo añadir los que no están ya (comparando por hashCode de los existentes)
-        if (annotationList.getItems().size() < current.size()) {
-            // Hay elementos nuevos, añadir solo el último
-            annotationList.getItems().add(current.get(current.size() - 1));
-        } else if (annotationList.getItems().size() > current.size()) {
-            // Se borró uno, recargar todo desde annotationNodes (los objetos correctos)
-            // En este caso no importa porque borrar no necesita parpadeo
-            annotationList.getItems().setAll(current);
-        }
-        // Si son iguales, no hacer nada
-    }
+    
     // Métodos de zoom
     @FXML
     private void zoomIn() {
@@ -601,7 +576,7 @@ public class MapasViewController implements Initializable {
         }
 
         app.removeAnnotation(selected);
-        annotationList.getItems().setAll(currentActivity.getAnnotations()); // reload completo solo aquí
+        annotationItems.remove(selected);
     }
     
     private void focusAnnotationOnMap(Annotation ann) {
