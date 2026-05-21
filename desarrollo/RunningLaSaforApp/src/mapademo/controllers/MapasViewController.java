@@ -71,15 +71,40 @@ public class MapasViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // Configurar slider de zoom
         zoom_slider.setMin(0.5);
         zoom_slider.setMax(1.5);
         zoom_slider.setValue(1.0);
         zoom_slider.valueProperty().addListener((obs, oldVal, newVal) -> zoom(newVal.doubleValue()));
 
-        // Inicializar nodos de zoom
-        // En el FXML ya están definidos contentGroup, zoomGroup, mapPane
-        // El mapPane se llenará en setActivity
+        // Listener de selección registrado una sola vez
+        borrarButton.setDisable(true);
+        annotationList.getSelectionModel().selectedItemProperty().addListener(
+            (obs, oldVal, newVal) -> borrarButton.setDisable(newVal == null)
+        );
+        
+        // Deseleccionar al clicar fuera de la lista
+        annotationList.setOnMouseClicked(e -> {
+            javafx.scene.Node node = e.getPickResult().getIntersectedNode();
+            // Subir por el árbol de nodos hasta encontrar un ListCell
+            while (node != null && !(node instanceof ListCell)) {
+                node = node.getParent();
+            }
+            if (node == null || ((ListCell<?>) node).isEmpty()) {
+                annotationList.getSelectionModel().clearSelection();
+            }
+        });
+        
+        // Deseleccionar al clicar fuera de la lista
+        annotationList.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+                    if (!annotationList.getBoundsInParent().contains(
+                            annotationList.getParent().sceneToLocal(e.getSceneX(), e.getSceneY()))) {
+                        annotationList.getSelectionModel().clearSelection();
+                    }
+                });
+            }
+        });
     }
 
     public void setActivity(Activity act) {
@@ -90,6 +115,12 @@ public class MapasViewController implements Initializable {
         buildElevationProfile();
         setupMapClickHandler();
         updateAnnotationList();
+        
+        // Centrar el mapa tras el layout
+        javafx.application.Platform.runLater(() -> {
+            map_scrollpane.setHvalue(0.5);
+            map_scrollpane.setVvalue(0.5);
+        });
     }
 
     private void loadMap() {
@@ -405,11 +436,6 @@ public class MapasViewController implements Initializable {
                 }
             }
         });
-        
-        borrarButton.setDisable(true);
-        annotationList.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldVal, newVal) -> borrarButton.setDisable(newVal == null)
-        );
     }
 
     // Métodos de zoom
