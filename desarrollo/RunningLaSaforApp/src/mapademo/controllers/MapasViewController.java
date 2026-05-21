@@ -121,6 +121,47 @@ public class MapasViewController implements Initializable {
                 else setText(ann.getType() + " - " + ann.getText());
             }
         });
+        
+        // Un solo bloque, sin duplicados
+        map_scrollpane.setPannable(false);
+
+        final double[] dragStart = new double[2];
+
+        map_scrollpane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                dragStart[0] = e.getSceneX();
+                dragStart[1] = e.getSceneY();
+                map_scrollpane.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+                e.consume();
+            }
+        });
+
+        map_scrollpane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_DRAGGED, e -> {
+            if (e.getButton() == MouseButton.PRIMARY) {
+                double dx = e.getSceneX() - dragStart[0];
+                double dy = e.getSceneY() - dragStart[1];
+                dragStart[0] = e.getSceneX();
+                dragStart[1] = e.getSceneY();
+
+                double contentWidth  = zoomGroup.getBoundsInParent().getWidth();
+                double contentHeight = zoomGroup.getBoundsInParent().getHeight();
+                double viewportWidth  = map_scrollpane.getViewportBounds().getWidth();
+                double viewportHeight = map_scrollpane.getViewportBounds().getHeight();
+
+                map_scrollpane.setHvalue(map_scrollpane.getHvalue() - dx / (contentWidth  - viewportWidth));
+                map_scrollpane.setVvalue(map_scrollpane.getVvalue() - dy / (contentHeight - viewportHeight));
+                map_scrollpane.setCursor(javafx.scene.Cursor.CLOSED_HAND);
+            }
+            if (e.getButton() == MouseButton.SECONDARY) {
+                e.consume();
+            }
+        });
+
+        map_scrollpane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_RELEASED, e -> {
+            map_scrollpane.setCursor(javafx.scene.Cursor.DEFAULT); // para cualquier botón
+        });
     }
 
     public void setActivity(Activity act) {
@@ -342,6 +383,7 @@ public class MapasViewController implements Initializable {
     private void setupMapClickHandler() {
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
+                e.consume();
                 // Cerrar menú anterior si existe
                 if (activeContextMenu != null) {
                     activeContextMenu.hide();
