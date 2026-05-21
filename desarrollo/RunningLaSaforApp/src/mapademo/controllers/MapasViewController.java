@@ -79,9 +79,12 @@ public class MapasViewController implements Initializable {
 
         // Listener de selección registrado una sola vez
         borrarButton.setDisable(true);
-        annotationList.getSelectionModel().selectedItemProperty().addListener(
-            (obs, oldVal, newVal) -> borrarButton.setDisable(newVal == null)
-        );
+        annotationList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            borrarButton.setDisable(newVal == null);
+            if (newVal != null && projection != null) {
+                focusAnnotationOnMap(newVal);
+            }
+        });
         
         // Deseleccionar al clicar fuera de la lista
         annotationList.setOnMouseClicked(e -> {
@@ -575,5 +578,46 @@ public class MapasViewController implements Initializable {
 
         app.removeAnnotation(selected);
         updateAnnotationList(); // <-- en lugar de annotationList.getItems().remove(selected)
+    }
+    
+    private void focusAnnotationOnMap(Annotation ann) {
+        if (ann.getGeoPoints().isEmpty()) return;
+
+        // Usar el primer punto de la anotación como centro
+        Point2D pt = projection.project(ann.getGeoPoints().get(0));
+
+        double contentWidth  = zoomGroup.getBoundsInParent().getWidth();
+        double contentHeight = zoomGroup.getBoundsInParent().getHeight();
+        double viewportWidth  = map_scrollpane.getViewportBounds().getWidth();
+        double viewportHeight = map_scrollpane.getViewportBounds().getHeight();
+
+        // Calcular el scroll necesario para centrar el punto
+        double scale = zoomGroup.getScaleX();
+        double scaledX = pt.getX() * scale;
+        double scaledY = pt.getY() * scale;
+
+        double hValue = (scaledX - viewportWidth  / 2) / (contentWidth  - viewportWidth);
+        double vValue = (scaledY - viewportHeight / 2) / (contentHeight - viewportHeight);
+
+        // Clamp entre 0 y 1
+        hValue = Math.max(0, Math.min(1, hValue));
+        vValue = Math.max(0, Math.min(1, vValue));
+
+        map_scrollpane.setHvalue(hValue);
+        map_scrollpane.setVvalue(vValue);
+
+        // Parpadeo para destacar la anotación
+        List<javafx.scene.Node> nodes = annotationNodes.get(ann);
+        if (nodes != null) {
+            nodes.forEach(n -> {
+                javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
+                    javafx.util.Duration.millis(200), n);
+                ft.setFromValue(1.0);
+                ft.setToValue(0.2);
+                ft.setCycleCount(4);
+                ft.setAutoReverse(true);
+                ft.play();
+            });
+        }
     }
 }
