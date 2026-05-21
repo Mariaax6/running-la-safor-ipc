@@ -63,6 +63,9 @@ public class MapasViewController implements Initializable {
     private final Color START_COLOR = Color.GREEN;
     private final Color END_COLOR = Color.RED;
     private Circle highlightCircle; // punto resaltado en mapa al pasar ratón sobre gráfico
+    
+    private java.util.Map<Annotation, List<javafx.scene.Node>> annotationNodes = new java.util.HashMap<>();
+    
     @FXML
     private Button borrarButton;
 
@@ -180,58 +183,66 @@ public class MapasViewController implements Initializable {
 
     private void drawAnnotations() {
         if (currentActivity == null || projection == null) return;
+        annotationNodes.clear(); // limpiar mapa de nodos antes de redibujar
         for (Annotation ann : currentActivity.getAnnotations()) {
             drawAnnotation(ann);
         }
     }
 
     private void drawAnnotation(Annotation ann) {
-        if (ann.getGeoPoints().isEmpty()) return;
-        Color color = Color.web(ann.getColor());
-        double width = ann.getStrokeWidth();
+    if (ann.getGeoPoints().isEmpty()) return;
+    Color color = Color.web(ann.getColor());
+    double width = ann.getStrokeWidth();
+    List<javafx.scene.Node> nodes = new ArrayList<>();
 
-        switch (ann.getType()) {
-            case POINT:
-            case TEXT:
-                GeoPoint gp = ann.getGeoPoints().get(0);
-                Point2D pt = projection.project(gp);
-                if (ann.getType() == AnnotationType.POINT) {
-                    Circle circle = new Circle(pt.getX(), pt.getY(), 5, color);
-                    circle.setStroke(Color.BLACK);
-                    mapPane.getChildren().add(circle);
-                }
-                if (ann.getText() != null && !ann.getText().isEmpty()) {
-                    Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
-                    text.setFill(color);
-                    mapPane.getChildren().add(text);
-                }
-                break;
+    switch (ann.getType()) {
+        case POINT:
+        case TEXT:
+            GeoPoint gp = ann.getGeoPoints().get(0);
+            Point2D pt = projection.project(gp);
+            if (ann.getType() == AnnotationType.POINT) {
+                Circle circle = new Circle(pt.getX(), pt.getY(), 5, color);
+                circle.setStroke(Color.BLACK);
+                mapPane.getChildren().add(circle);
+                nodes.add(circle);
+            }
+            if (ann.getText() != null && !ann.getText().isEmpty()) {
+                Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
+                text.setFill(color);
+                mapPane.getChildren().add(text);
+                nodes.add(text);
+            }
+            break;
 
-            case LINE:
-                if (ann.getGeoPoints().size() < 2) return;
-                Point2D p1 = projection.project(ann.getGeoPoints().get(0));
-                Point2D p2 = projection.project(ann.getGeoPoints().get(1));
-                Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-                line.setStroke(color);
-                line.setStrokeWidth(width);
-                mapPane.getChildren().add(line);
-                break;
+        case LINE:
+            if (ann.getGeoPoints().size() < 2) return;
+            Point2D p1 = projection.project(ann.getGeoPoints().get(0));
+            Point2D p2 = projection.project(ann.getGeoPoints().get(1));
+            Line line = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+            line.setStroke(color);
+            line.setStrokeWidth(width);
+            mapPane.getChildren().add(line);
+            nodes.add(line);
+            break;
 
-            case CIRCLE:
-                if (ann.getGeoPoints().size() < 2) return;
-                Point2D center = projection.project(ann.getGeoPoints().get(0));
-                Point2D border = projection.project(ann.getGeoPoints().get(1));
-                double radius = Math.sqrt(
-                    Math.pow(border.getX() - center.getX(), 2) +
-                    Math.pow(border.getY() - center.getY(), 2));
-                Circle c = new Circle(center.getX(), center.getY(), radius);
-                c.setStroke(color);
-                c.setStrokeWidth(width);
-                c.setFill(Color.TRANSPARENT);
-                mapPane.getChildren().add(c);
-                break;
-        }
+        case CIRCLE:
+            if (ann.getGeoPoints().size() < 2) return;
+            Point2D center = projection.project(ann.getGeoPoints().get(0));
+            Point2D border = projection.project(ann.getGeoPoints().get(1));
+            double radius = Math.sqrt(
+                Math.pow(border.getX() - center.getX(), 2) +
+                Math.pow(border.getY() - center.getY(), 2));
+            Circle c = new Circle(center.getX(), center.getY(), radius);
+            c.setStroke(color);
+            c.setStrokeWidth(width);
+            c.setFill(Color.TRANSPARENT);
+            mapPane.getChildren().add(c);
+            nodes.add(c);
+            break;
     }
+
+    annotationNodes.put(ann, nodes); // <-- registrar nodos
+}
 
    private void buildElevationProfile() {
     xAxis = (NumberAxis) elevationChart.getXAxis();
@@ -394,6 +405,11 @@ public class MapasViewController implements Initializable {
                 }
             }
         });
+        
+        borrarButton.setDisable(true);
+        annotationList.getSelectionModel().selectedItemProperty().addListener(
+            (obs, oldVal, newVal) -> borrarButton.setDisable(newVal == null)
+        );
     }
 
     // Métodos de zoom
@@ -424,6 +440,15 @@ public class MapasViewController implements Initializable {
 
     @FXML
     private void borrar(ActionEvent event) {
-        
+        Annotation selected = annotationList.getSelectionModel().getSelectedItem();
+        if (selected == null) return; // solo por seguridad
+
+        List<javafx.scene.Node> nodes = annotationNodes.remove(selected);
+        if (nodes != null) {
+            mapPane.getChildren().removeAll(nodes);
+        }
+
+        app.removeAnnotation(selected);
+        annotationList.getItems().remove(selected);
     }
 }
