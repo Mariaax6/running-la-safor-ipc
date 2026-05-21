@@ -583,7 +583,6 @@ public class MapasViewController implements Initializable {
     private void focusAnnotationOnMap(Annotation ann) {
         if (ann.getGeoPoints().isEmpty()) return;
 
-        // Usar el primer punto de la anotación como centro
         Point2D pt = projection.project(ann.getGeoPoints().get(0));
 
         double contentWidth  = zoomGroup.getBoundsInParent().getWidth();
@@ -591,33 +590,46 @@ public class MapasViewController implements Initializable {
         double viewportWidth  = map_scrollpane.getViewportBounds().getWidth();
         double viewportHeight = map_scrollpane.getViewportBounds().getHeight();
 
-        // Calcular el scroll necesario para centrar el punto
         double scale = zoomGroup.getScaleX();
         double scaledX = pt.getX() * scale;
         double scaledY = pt.getY() * scale;
 
-        double hValue = (scaledX - viewportWidth  / 2) / (contentWidth  - viewportWidth);
-        double vValue = (scaledY - viewportHeight / 2) / (contentHeight - viewportHeight);
+        double targetH = (scaledX - viewportWidth  / 2) / (contentWidth  - viewportWidth);
+        double targetV = (scaledY - viewportHeight / 2) / (contentHeight - viewportHeight);
 
-        // Clamp entre 0 y 1
-        hValue = Math.max(0, Math.min(1, hValue));
-        vValue = Math.max(0, Math.min(1, vValue));
+        targetH = Math.max(0, Math.min(1, targetH));
+        targetV = Math.max(0, Math.min(1, targetV));
 
-        map_scrollpane.setHvalue(hValue);
-        map_scrollpane.setVvalue(vValue);
+        // Animación suave del scroll
+        double startH = map_scrollpane.getHvalue();
+        double startV = map_scrollpane.getVvalue();
+        double finalH = targetH;
+        double finalV = targetV;
 
-        // Parpadeo para destacar la anotación
-        List<javafx.scene.Node> nodes = annotationNodes.get(ann);
-        if (nodes != null) {
-            nodes.forEach(n -> {
-                javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
-                    javafx.util.Duration.millis(200), n);
-                ft.setFromValue(1.0);
-                ft.setToValue(0.2);
-                ft.setCycleCount(4);
-                ft.setAutoReverse(true);
-                ft.play();
-            });
-        }
+        javafx.animation.Timeline timeline = new javafx.animation.Timeline();
+        timeline.getKeyFrames().add(new javafx.animation.KeyFrame(
+            javafx.util.Duration.millis(400),
+            new javafx.animation.KeyValue(map_scrollpane.hvalueProperty(), finalH, 
+                javafx.animation.Interpolator.EASE_BOTH),
+            new javafx.animation.KeyValue(map_scrollpane.vvalueProperty(), finalV, 
+                javafx.animation.Interpolator.EASE_BOTH)
+        ));
+        timeline.play();
+
+        // Parpadeo al llegar
+        timeline.setOnFinished(e -> {
+            List<javafx.scene.Node> nodes = annotationNodes.get(ann);
+            if (nodes != null) {
+                nodes.forEach(n -> {
+                    javafx.animation.FadeTransition ft = new javafx.animation.FadeTransition(
+                        javafx.util.Duration.millis(200), n);
+                    ft.setFromValue(1.0);
+                    ft.setToValue(0.2);
+                    ft.setCycleCount(4);
+                    ft.setAutoReverse(true);
+                    ft.play();
+                });
+            }
+        });
     }
 }
