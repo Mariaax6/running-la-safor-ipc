@@ -601,7 +601,7 @@ public class MapasViewController implements Initializable {
         }
 
         app.removeAnnotation(selected);
-        updateAnnotationList(); // <-- en lugar de annotationList.getItems().remove(selected)
+        annotationList.getItems().setAll(currentActivity.getAnnotations()); // reload completo solo aquí
     }
     
     private void focusAnnotationOnMap(Annotation ann) {
