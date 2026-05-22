@@ -37,8 +37,9 @@
          <HBox>
             <children>
                   <Label style="-fx-font-weight: bold; -fx-font-size: 16px;" text="Anotaciones" />
-               <HBox alignment="TOP_RIGHT" HBox.hgrow="ALWAYS">
+               <HBox alignment="TOP_RIGHT" spacing="10.0" HBox.hgrow="ALWAYS">
                   <children>
+                     <Button fx:id="editarButton" layoutX="91.0" layoutY="10.0" mnemonicParsing="false" onAction="#editar" text="Editar" />
                      <Button fx:id="borrarButton" mnemonicParsing="false" onAction="#borrar" text="Borrar" />
                   </children>
                </HBox>

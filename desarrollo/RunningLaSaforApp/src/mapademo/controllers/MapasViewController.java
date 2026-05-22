@@ -74,6 +74,8 @@ public class MapasViewController implements Initializable {
     
     @FXML
     private Button borrarButton;
+    @FXML
+    private Button editarButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -87,6 +89,7 @@ public class MapasViewController implements Initializable {
         annotationList.setItems(annotationItems);
         selectionListener = (obs, oldVal, newVal) -> {
             borrarButton.setDisable(newVal == null);
+            editarButton.setDisable(newVal == null);
             if (newVal != null && projection != null) {
                 focusAnnotationOnMap(newVal);
             }
@@ -113,7 +116,8 @@ public class MapasViewController implements Initializable {
                     // Subir por el árbol hasta encontrar el borrarButton
                     javafx.scene.Node n = node;
                     while (n != null) {
-                        if (n == borrarButton) return; // clic en el botón, no deseleccionar
+                        if (n == borrarButton) return;
+                        if (n == editarButton) return;
                         n = n.getParent();
                     }
                     if (!annotationList.getBoundsInParent().contains(
@@ -773,6 +777,7 @@ public class MapasViewController implements Initializable {
 
         annotationList.getSelectionModel().selectedItemProperty().addListener(selectionListener);
         borrarButton.setDisable(true);
+        editarButton.setDisable(true);
     }
     
     private void focusAnnotationOnMap(Annotation ann) {
@@ -822,5 +827,64 @@ public class MapasViewController implements Initializable {
                 ft.play();
             });
         }
+    }
+
+    @FXML
+    private void editar(ActionEvent event) {
+        System.out.println("editar llamado");
+        Annotation selected = annotationList.getSelectionModel().getSelectedItem();
+        System.out.println("selected: " + selected);
+        if (selected == null) return;
+
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.setTitle("Editar anotación");
+        dialog.setHeaderText("Modifica los detalles");
+
+        ButtonType okButton = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButton, ButtonType.CANCEL);
+
+        TextField textField = new TextField(selected.getText());
+        ColorPicker colorPicker = new ColorPicker(Color.web(selected.getColor()));
+
+        VBox vbox = new VBox(10,
+            new Label("Texto:"), textField,
+            new Label("Color:"), colorPicker
+        );
+        dialog.getDialogPane().setContent(vbox);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButton) {
+                // Eliminar nodos visuales y anotación antigua
+                List<javafx.scene.Node> oldNodes = annotationNodes.remove(selected.hashCode());
+                if (oldNodes != null) mapPane.getChildren().removeAll(oldNodes);
+                app.removeAnnotation(selected);
+                annotationItems.remove(selected);
+
+                // Crear nueva anotación con los datos editados
+                Color c = colorPicker.getValue();
+                String hex = String.format("#%02X%02X%02X",
+                    (int)(c.getRed()   * 255),
+                    (int)(c.getGreen() * 255),
+                    (int)(c.getBlue()  * 255));
+
+                Annotation newAnn = new Annotation(
+                    selected.getType(),
+                    textField.getText(),
+                    hex,
+                    selected.getStrokeWidth(),
+                    selected.getGeoPoints()
+                );
+
+                Annotation saved = app.addAnnotation(currentActivity, newAnn);
+                if (saved != null) {
+                    drawAnnotation(saved);
+                    annotationItems.add(saved);
+                    annotationList.getSelectionModel().select(saved);
+                }
+            }
+            return null;
+        });
+
+        dialog.showAndWait();
     }
 }
