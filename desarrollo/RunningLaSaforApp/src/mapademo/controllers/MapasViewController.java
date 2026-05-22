@@ -170,6 +170,15 @@ public class MapasViewController implements Initializable {
         map_scrollpane.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_RELEASED, e -> {
             map_scrollpane.setCursor(javafx.scene.Cursor.DEFAULT); // para cualquier botón
         });
+        
+        map_scrollpane.addEventFilter(javafx.scene.input.ScrollEvent.SCROLL, e -> {
+            e.consume(); // evita que el ScrollPane haga scroll normal
+
+            double delta = e.getDeltaY() > 0 ? 0.1 : -0.1;
+            double newVal = zoom_slider.getValue() + delta;
+            newVal = Math.max(zoom_slider.getMin(), Math.min(zoom_slider.getMax(), newVal));
+            zoom_slider.setValue(newVal);
+        });
     }
 
     public void setActivity(Activity act) {
