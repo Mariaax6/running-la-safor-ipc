@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="20" style="-fx-padding: 30;"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="mapademo.LoginViewController">
+
+    <Label text="Running la Safor" style="-fx-font-size: 24px;" />
+
+    <VBox spacing="8" maxWidth="350">
+
+        <Label text="Nickname*" />
+        <TextField fx:id="nicknameField" promptText="ej: jpgarcia"/>
+        <Label fx:id="nickError"
+               text="6-15 caracteres (letras, números, - o _)"
+               textFill="red"
+               visible="false"
+               wrapText="true"/>
+
+        <Label text="Contraseña*" />
+        <PasswordField fx:id="passwordField" promptText="ej: Pass123!" />
+        <Label fx:id="passError"
+               text="8-20 caracteres, con mayúscula, minúscula, número y símbolo"
+               textFill="red"
+               visible="false"
+               wrapText="true"/>
+
+        <!-- ERROR LOGIN -->
+        <Label fx:id="loginError"
+               text="Usuario o contraseña incorrectos"
+               textFill="red"
+               visible="false"
+               wrapText="true"/>
+
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="10">
+        <Button fx:id="btnLogin"
+                text="Iniciar sesión"
+                onAction="#handleLogin"/>
+
+        <Button text="Registrarse"
+                onAction="#abrirRegistro"/>
+    </HBox>
+
+    <!-- BOTÓN SIN LOGIN -->
+    <Button text="Entrar sin iniciar sesión"
+            onAction="#entrarSinLogin"/>
+
+</VBox>
