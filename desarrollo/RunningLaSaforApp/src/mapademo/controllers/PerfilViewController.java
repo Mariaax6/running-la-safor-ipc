@@ -8,18 +8,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
 public class PerfilViewController {
 
-   @FXML private TextField nickField;
+    @FXML private TextField nickField;
     @FXML private TextField emailField;
     @FXML private PasswordField passField;
     @FXML private DatePicker birthPicker;
     @FXML private Label avatarLabel;
+    @FXML private Button btnGuardar;
+    @FXML private Label emailError;
+    @FXML private Label passError;
+    @FXML private Label fechaError;
 
     private SportActivityApp app = SportActivityApp.getInstance();
     private User currentUser;
@@ -32,8 +35,121 @@ public class PerfilViewController {
             nickField.setText(currentUser.getNickName());
             emailField.setText(currentUser.getEmail());
             birthPicker.setValue(currentUser.getBirthDate());
-            // No se muestra contraseña
             passField.clear();
+        }
+        
+        nickField.setDisable(true);
+        nickField.setStyle("-fx-opacity: 0.7; -fx-background-color: #f0f0f0;");
+
+        btnGuardar.setDisable(true);
+        btnGuardar.setStyle("-fx-opacity: 0.6;");
+
+        emailField.textProperty().addListener((obs, o, n) -> comprobarCampos());
+        passField.textProperty().addListener((obs, o, n) -> comprobarCampos());
+        birthPicker.valueProperty().addListener((obs, o, n) -> comprobarCampos());
+    }
+
+    private void marcarCampoEmail(Control field, Label errorLabel, boolean correcto, boolean tieneTexto) {
+        if (!tieneTexto) {
+            errorLabel.setVisible(false);
+            errorLabel.setText("");
+            field.setStyle("");
+        } else {
+            errorLabel.setVisible(true);
+            if (!correcto) {
+                field.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
+                errorLabel.setStyle("-fx-text-fill: #e74c3c;");
+            } else {
+                field.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
+                errorLabel.setStyle("-fx-text-fill: #4CAF50;");
+            }
+        }
+    }
+    
+    private void marcarCampoPass(Control field, Label errorLabel, boolean correcto, boolean tieneTexto) {
+        if (!tieneTexto) {
+            errorLabel.setVisible(false);
+            errorLabel.setText("");
+            field.setStyle("");
+        } else {
+            errorLabel.setVisible(true);
+            if (!correcto) {
+                field.setStyle("-fx-border-color: #e74c3c; -fx-border-width: 2px;");
+                errorLabel.setStyle("-fx-text-fill: #e74c3c;");
+            } else {
+                field.setStyle("-fx-border-color: #4CAF50; -fx-border-width: 2px;");
+                errorLabel.setStyle("-fx-text-fill: #4CAF50;");
+            }
+        }
+    }
+    
+    private void marcarCampoFecha(boolean correcto, boolean tieneTexto) {
+        if (!tieneTexto) {
+            fechaError.setVisible(false);
+            fechaError.setText("");
+            birthPicker.setStyle("");
+        } else {
+            if (!correcto) {
+                fechaError.setVisible(true);
+                fechaError.setText("❌ Debes tener más de 12 años");
+                fechaError.setStyle("-fx-text-fill: #e74c3c;");
+                birthPicker.setStyle("");
+            } else {
+                fechaError.setVisible(true);
+                fechaError.setText("✓ Edad válida");
+                fechaError.setStyle("-fx-text-fill: #4CAF50;");
+                birthPicker.setStyle("");
+            }
+        }
+    }
+
+    private void comprobarCampos() {
+        String email = emailField.getText();
+        String password = passField.getText();
+        LocalDate fecha = birthPicker.getValue();
+
+        boolean emailOk = email.isEmpty() || User.checkEmail(email);
+        boolean passOk = password.isEmpty() || User.checkPassword(password);
+        boolean fechaOk = fecha != null && User.isOlderThan(fecha, 12);
+
+        if (!email.isEmpty()) {
+            if (!emailOk) {
+                emailError.setText("❌ usuario@dominio");
+                marcarCampoEmail(emailField, emailError, false, true);
+            } else {
+                emailError.setText("✓ Email válido");
+                marcarCampoEmail(emailField, emailError, true, true);
+            }
+        } else {
+            emailError.setText("");
+            marcarCampoEmail(emailField, emailError, false, false);
+        }
+
+        if (!password.isEmpty()) {
+            if (!passOk) {
+                passError.setText("❌ 8-20 caracteres, con mayúscula, minúscula, número y símbolo");
+                marcarCampoPass(passField, passError, false, true);
+            } else {
+                passError.setText("✓ Contraseña segura");
+                marcarCampoPass(passField, passError, true, true);
+            }
+        } else {
+            passError.setText("");
+            marcarCampoPass(passField, passError, false, false);
+        }
+
+        if (fecha != null) {
+            marcarCampoFecha(fechaOk, true);
+        } else {
+            marcarCampoFecha(false, false);
+        }
+
+        boolean valido = emailOk && passOk && fechaOk;
+        btnGuardar.setDisable(!valido);
+        if (valido) {
+            btnGuardar.setStyle("-fx-opacity: 1.0;");
+        } else {
+            btnGuardar.setStyle("-fx-opacity: 0.6;");
         }
     }
 
@@ -41,10 +157,14 @@ public class PerfilViewController {
     private void chooseAvatar() {
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Seleccionar avatar");
+        chooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Imágenes", "*.png", "*.jpg", "*.jpeg")
+        );
         File f = chooser.showOpenDialog(avatarLabel.getScene().getWindow());
         if (f != null) {
             newAvatarPath = f.getAbsolutePath();
             avatarLabel.setText(f.getName());
+            comprobarCampos();
         }
     }
 
@@ -55,25 +175,28 @@ public class PerfilViewController {
         String email = emailField.getText().trim();
         String pass = passField.getText().trim();
         LocalDate birth = birthPicker.getValue();
-        if (pass.isEmpty()) {
-            pass = currentUser.getPassword(); // mantener actual
-        }
-        if (!User.checkEmail(email)) {
+
+        if (!email.isEmpty() && !User.checkEmail(email)) {
             showAlert("Email inválido", "Formato incorrecto.");
             return;
         }
+
         if (!pass.isEmpty() && !User.checkPassword(pass)) {
             showAlert("Contraseña inválida", "Debe cumplir los requisitos.");
             return;
         }
+
         if (birth == null || !User.isOlderThan(birth, 12)) {
             showAlert("Fecha no válida", "Debes ser mayor de 12 años.");
             return;
         }
 
-        boolean ok = app.updateCurrentUser(email, pass, birth, newAvatarPath);
+        String finalPass = pass.isEmpty() ? currentUser.getPassword() : pass;
+        String finalEmail = email.isEmpty() ? currentUser.getEmail() : email;
+
+        boolean ok = app.updateCurrentUser(finalEmail, finalPass, birth, newAvatarPath);
         if (ok) {
-            showAlert("Perfil actualizado", "Los cambios se han guardado.");
+            showAlert("Perfil actualizado", "Los cambios se han guardado correctamente.");
             goBack();
         } else {
             showAlert("Error", "No se pudieron guardar los cambios.");
