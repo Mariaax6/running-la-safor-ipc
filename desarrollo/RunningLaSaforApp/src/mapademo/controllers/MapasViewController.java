@@ -121,6 +121,12 @@ public class MapasViewController implements Initializable {
                         annotationList.getSelectionModel().clearSelection();
                     }
                 });
+                
+                newScene.setOnKeyPressed(e -> {
+                    if (e.getCode() == javafx.scene.input.KeyCode.DELETE) {
+                        borrar(null);
+                    }
+                });
             }
         });
         
