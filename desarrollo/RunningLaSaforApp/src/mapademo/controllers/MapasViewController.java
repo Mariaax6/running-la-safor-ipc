@@ -436,7 +436,6 @@ public class MapasViewController implements Initializable {
     }
 
     private void addAnnotation(AnnotationType type, GeoPoint... points) {
-        // Pedir texto y color al usuario
         Dialog<Annotation> dialog = new Dialog<>();
         dialog.setTitle("Nueva anotación");
         dialog.setHeaderText("Introduce los detalles");
@@ -446,19 +445,29 @@ public class MapasViewController implements Initializable {
 
         TextField textField = new TextField();
         textField.setPromptText("Texto (opcional)");
-        TextField colorField = new TextField("#FF0000");
-        colorField.setPromptText("Color CSS (ej. #FF0000)");
 
-        VBox vbox = new VBox(10, new Label("Texto:"), textField, new Label("Color:"), colorField);
+        // Reemplaza el TextField de color por un ColorPicker
+        ColorPicker colorPicker = new ColorPicker(Color.RED);
+
+        VBox vbox = new VBox(10,
+            new Label("Texto:"), textField,
+            new Label("Color:"), colorPicker
+        );
         dialog.getDialogPane().setContent(vbox);
 
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == okButton) {
+                // Convierte el Color de JavaFX a hex CSS (#RRGGBB)
+                Color c = colorPicker.getValue();
+                String hex = String.format("#%02X%02X%02X",
+                    (int) (c.getRed()   * 255),
+                    (int) (c.getGreen() * 255),
+                    (int) (c.getBlue()  * 255));
                 return new Annotation(
                     type,
                     textField.getText(),
-                    colorField.getText(),
-                    2.0, // grosor
+                    hex,
+                    2.0,
                     List.of(points)
                 );
             }
