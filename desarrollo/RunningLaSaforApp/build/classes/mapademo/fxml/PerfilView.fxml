@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="16.0" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="mapademo.controllers.PerfilViewController"
+      styleClass="card" stylesheets="@../resources/estilos.css">
+    <padding><Insets bottom="32.0" left="32.0" right="32.0" top="32.0"/></padding>
+    <Label text="Modificar perfil" styleClass="title"/>
+    <TextField fx:id="nickField" editable="false"/>
+    <VBox spacing="8.0">
+        <Label text="Correo electrónico"/>
+        <TextField fx:id="emailField"/>
+    </VBox>
+    <VBox spacing="8.0">
+        <Label text="Nueva contraseña"/>
+        <PasswordField fx:id="passField" promptText="Dejar en blanco para mantener"/>
+    </VBox>
+    <VBox spacing="8.0">
+        <Label text="Fecha de nacimiento"/>
+        <DatePicker fx:id="birthPicker"/>
+    </VBox>
+    <HBox spacing="10.0" alignment="CENTER_LEFT">
+        <Button text="Cambiar avatar" onAction="#chooseAvatar" styleClass="button-secondary"/>
+        <Label fx:id="avatarLabel" text="Sin avatar"/>
+    </HBox>
+    <Button text="Guardar cambios" onAction="#saveProfile" styleClass="button-primary" maxWidth="Infinity"/>
+    <Hyperlink text="Volver" onAction="#goBack"/>
+</VBox>

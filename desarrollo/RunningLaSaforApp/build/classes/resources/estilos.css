@@ -1,0 +1,198 @@
+/* resources/estilos.css */
+.root {
+    -fx-font-family: "Segoe UI", "Roboto", "Helvetica Neue", sans-serif;
+    -fx-background-color: #f5f5f7;
+    -fx-text-fill: #1d1d1f;
+}
+
+/* Contenedores principales */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);
+    -fx-padding: 24px;
+}
+
+/* Botones primarios */
+.button-primary {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+.button-primary:hover {
+    -fx-background-color: #0077ed;
+}
+.button-primary:pressed {
+    -fx-background-color: #0060c7;
+}
+
+/* Botones secundarios */
+.button-secondary {
+    -fx-background-color: #e8e8ed;
+    -fx-text-fill: #1d1d1f;
+    -fx-background-radius: 8px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+}
+.button-secondary:hover {
+    -fx-background-color: #d2d2d7;
+}
+
+/* Campos de texto */
+.text-field, .password-field {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #c6c6c8;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px 12px;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #86868b;
+}
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #0071e3;
+    -fx-border-width: 2px;
+}
+
+/* Etiquetas */
+.label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #1d1d1f;
+}
+.label.title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* ListView y TableView */
+.list-view, .table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 8px;
+}
+.list-cell, .table-row-cell {
+    -fx-padding: 8px 12px;
+    -fx-font-size: 14px;
+}
+.list-cell:selected, .table-row-cell:selected {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+}
+
+/* Hiperenlaces */
+.hyperlink {
+    -fx-text-fill: #0071e3;
+    -fx-underline: true;
+    -fx-font-size: 14px;
+}
+
+/* Sidebar mejorada */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+    -fx-padding: 30 0 20 0;
+    -fx-spacing: 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 10, 0, 0, 0);
+}
+.sidebar .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e0e0e0;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 14 25 14 25;
+    -fx-cursor: hand;
+    -fx-border-width: 0;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+.sidebar .button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: white;
+}
+.sidebar .button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+/* Separador */
+.sidebar .separator {
+    -fx-background: rgba(255, 255, 255, 0.1);
+}
+.sidebar .separator .line {
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+}
+/* Título del panel (opcional) */
+.sidebar .sidebar-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-padding: 0 25 20 25;
+}
+/* Fondo global para pantallas de login/registro */
+.background-dark {
+    -fx-background-color: linear-gradient(to bottom, #1a1a2e, #16213e);
+}
+
+/* Cabecera superior */
+.header-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-padding: 15 30;
+}
+.header-bar .label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Tarjeta blanca centrada (usada en login/registro) */
+.card-white {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 10, 0, 0, 2);
+    -fx-padding: 32px;
+    -fx-max-width: 420px;
+}
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 12px 12px 0 0;
+}
+.dialog-pane .button-bar .button {
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 20px;
+}
+.dialog-pane .button-bar .button:first-child {
+    -fx-background-color: #0071e3;
+    -fx-text-fill: white;
+}
+.dialog-pane .button-bar .button:first-child:hover {
+    -fx-background-color: #0077ed;
+}
+.dialog-pane .button-bar .button:last-child {
+    -fx-background-color: #e8e8ed;
+    -fx-text-fill: #1d1d1f;
+}
+/* Menú de usuario desplegable */
+.user-menu-button {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 20px;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+.user-menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+}
+.user-menu-button .label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.user-menu-button .arrow {
+    -fx-background-color: white;
+    -fx-background-radius: 2px;
+    -fx-padding: 2;
+}
