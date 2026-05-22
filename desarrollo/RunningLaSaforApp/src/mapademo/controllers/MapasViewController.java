@@ -69,6 +69,7 @@ public class MapasViewController implements Initializable {
     private final javafx.collections.ObservableList<Annotation> annotationItems = 
     javafx.collections.FXCollections.observableArrayList();
     private Circle chartHighlightCircle;
+    private javafx.beans.value.ChangeListener<Annotation> selectionListener;
     
     
     @FXML
@@ -84,12 +85,13 @@ public class MapasViewController implements Initializable {
         // Listener de selección registrado una sola vez
         borrarButton.setDisable(true);
         annotationList.setItems(annotationItems);
-        annotationList.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        selectionListener = (obs, oldVal, newVal) -> {
             borrarButton.setDisable(newVal == null);
             if (newVal != null && projection != null) {
                 focusAnnotationOnMap(newVal);
             }
-        });
+        };
+        annotationList.getSelectionModel().selectedItemProperty().addListener(selectionListener);
         
         // Deseleccionar al clicar fuera de la lista
         annotationList.setOnMouseClicked(e -> {
@@ -317,6 +319,13 @@ public class MapasViewController implements Initializable {
                     circle.setStroke(Color.BLACK);
                     mapPane.getChildren().add(circle);
                     nodes.add(circle);
+
+                    // Área de clic más ancha
+                    Circle pointHitArea = new Circle(pt.getX(), pt.getY(), 12);
+                    pointHitArea.setFill(Color.TRANSPARENT);
+                    pointHitArea.setStroke(null);
+                    mapPane.getChildren().add(pointHitArea);
+                    nodes.add(pointHitArea);
                 }
                 if (ann.getText() != null && !ann.getText().isEmpty()) {
                     Text text = new Text(pt.getX() + 7, pt.getY() - 5, ann.getText());
@@ -335,6 +344,12 @@ public class MapasViewController implements Initializable {
                 line.setStrokeWidth(width);
                 mapPane.getChildren().add(line);
                 nodes.add(line);
+                
+                Line lineHitArea = new Line(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+                lineHitArea.setStroke(Color.TRANSPARENT);
+                lineHitArea.setStrokeWidth(10); // área de clic más ancha
+                mapPane.getChildren().add(lineHitArea);
+                nodes.add(lineHitArea);
                 break;
 
             case CIRCLE:
@@ -347,9 +362,19 @@ public class MapasViewController implements Initializable {
                 Circle c = new Circle(center.getX(), center.getY(), radius);
                 c.setStroke(color);
                 c.setStrokeWidth(width);
-                c.setFill(Color.TRANSPARENT);
+                c.setPickOnBounds(false);
+                c.setFill(null);
                 mapPane.getChildren().add(c);
                 nodes.add(c);
+
+                // Área de clic más ancha
+                Circle cHitArea = new Circle(center.getX(), center.getY(), radius);
+                cHitArea.setStroke(Color.TRANSPARENT);
+                cHitArea.setStrokeWidth(10);
+                cHitArea.setPickOnBounds(false);
+                cHitArea.setFill(null);
+                mapPane.getChildren().add(cHitArea);
+                nodes.add(cHitArea);
                 break;
         }
         
@@ -729,6 +754,8 @@ public class MapasViewController implements Initializable {
         Annotation selected = annotationList.getSelectionModel().getSelectedItem();
         if (selected == null) return;
 
+        annotationList.getSelectionModel().selectedItemProperty().removeListener(selectionListener);
+
         List<javafx.scene.Node> nodes = annotationNodes.remove(selected.hashCode());
         if (nodes != null) {
             mapPane.getChildren().removeAll(nodes);
@@ -736,6 +763,10 @@ public class MapasViewController implements Initializable {
 
         app.removeAnnotation(selected);
         annotationItems.remove(selected);
+        annotationList.getSelectionModel().clearSelection();
+
+        annotationList.getSelectionModel().selectedItemProperty().addListener(selectionListener);
+        borrarButton.setDisable(true);
     }
     
     private void focusAnnotationOnMap(Annotation ann) {
