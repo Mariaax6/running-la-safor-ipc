@@ -68,6 +68,7 @@ public class MapasViewController implements Initializable {
     private javafx.scene.Node previewNode = null;
     private final javafx.collections.ObservableList<Annotation> annotationItems = 
     javafx.collections.FXCollections.observableArrayList();
+    private Circle chartHighlightCircle;
     
     
     @FXML
@@ -354,46 +355,90 @@ public class MapasViewController implements Initializable {
 
     private void buildElevationProfile() {
         xAxis = (NumberAxis) elevationChart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) elevationChart.getYAxis();
         elevationChart.getData().clear();
+
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         double distance = 0;
         TrackPoint prev = null;
         for (TrackPoint tp : currentActivity.getTrackPoints()) {
-            if (prev != null) {
-                distance += prev.distanceTo(tp);
-            }
+            if (prev != null) distance += prev.distanceTo(tp);
             prev = tp;
             series.getData().add(new XYChart.Data<>(distance / 1000.0, tp.getElevation()));
         }
         elevationChart.getData().add(series);
 
-        // --- aquí mantienes tu código de resaltado con el ratón ---
         elevationChart.setOnMouseMoved(e -> {
             if (highlightCircle != null) {
                 mapPane.getChildren().remove(highlightCircle);
                 highlightCircle = null;
             }
-            double mouseX = xAxis.getValueForDisplay(e.getX()).doubleValue();
-            double minDist = Double.MAX_VALUE;
+            if (chartHighlightCircle != null) {
+                chartHighlightCircle.setVisible(false);
+            }
+
+            double axisX = xAxis.sceneToLocal(e.getSceneX(), e.getSceneY()).getX();
+            double mouseKm = xAxis.getValueForDisplay(axisX).doubleValue();
+
+            double minDiff = Double.MAX_VALUE;
             TrackPoint closest = null;
-            TrackPoint prevPoint = null;   // variable local a la lambda
+            double closestKm = 0;
+            TrackPoint prevPoint = null;
             double dist = 0;
             for (TrackPoint tp : currentActivity.getTrackPoints()) {
-                if (prevPoint != null) {
-                    dist += prevPoint.distanceTo(tp);
-                }
+                if (prevPoint != null) dist += prevPoint.distanceTo(tp);
                 prevPoint = tp;
-                double d = Math.abs(mouseX - dist / 1000.0);
-                if (d < minDist) {
-                    minDist = d;
+                double d = Math.abs(mouseKm - dist / 1000.0);
+                if (d < minDiff) {
+                    minDiff = d;
                     closest = tp;
+                    closestKm = dist / 1000.0;
                 }
             }
+
             if (closest != null) {
+                // Punto en el mapa
                 Point2D pt = projection.project(closest);
                 highlightCircle = new Circle(pt.getX(), pt.getY(), 5, Color.YELLOW);
                 highlightCircle.setStroke(Color.BLACK);
                 mapPane.getChildren().add(highlightCircle);
+
+                // Coordenadas en escena del punto del gráfico
+                final double screenX = xAxis.localToScene(xAxis.getDisplayPosition(closestKm), 0).getX();
+                final double screenY = yAxis.localToScene(0, yAxis.getDisplayPosition(closest.getElevation())).getY();
+
+                if (chartHighlightCircle == null) {
+                    chartHighlightCircle = new Circle(6, Color.YELLOW);
+                    chartHighlightCircle.setStroke(Color.BLACK);
+                    chartHighlightCircle.setStrokeWidth(1.5);
+                    chartHighlightCircle.setMouseTransparent(true);
+                }
+
+                javafx.application.Platform.runLater(() -> {
+                    javafx.scene.layout.Pane chartPane = (javafx.scene.layout.Pane)
+                        elevationChart.lookup(".chart-plot-background").getParent();
+
+                    if (!chartPane.getChildren().contains(chartHighlightCircle)) {
+                        chartPane.getChildren().add(chartHighlightCircle);
+                    }
+
+                    double localX = chartPane.sceneToLocal(screenX, screenY).getX();
+                    double localY = chartPane.sceneToLocal(screenX, screenY).getY();
+
+                    chartHighlightCircle.setCenterX(localX);
+                    chartHighlightCircle.setCenterY(localY);
+                    chartHighlightCircle.setVisible(true);
+                });
+            }
+        });
+
+        elevationChart.setOnMouseExited(e -> {
+            if (highlightCircle != null) {
+                mapPane.getChildren().remove(highlightCircle);
+                highlightCircle = null;
+            }
+            if (chartHighlightCircle != null) {
+                chartHighlightCircle.setVisible(false);
             }
         });
     }
