@@ -127,7 +127,13 @@ public class MapasViewController implements Initializable {
             protected void updateItem(Annotation ann, boolean empty) {
                 super.updateItem(ann, empty);
                 if (empty || ann == null) setText(null);
-                else setText(ann.getType() + " - " + ann.getText());
+                else {
+                    String text = ann.getText();
+                    if (text == null || text.isEmpty())
+                        setText(ann.getType().toString());
+                    else
+                        setText(ann.getType() + " - " + text);
+                }
             }
         });
         
@@ -346,10 +352,19 @@ public class MapasViewController implements Initializable {
                 nodes.add(c);
                 break;
         }
+        
+        for (javafx.scene.Node node : nodes) {
+            node.setOnMouseClicked(e -> {
+                if (e.getButton() == MouseButton.PRIMARY) {
+                    annotationList.getSelectionModel().select(ann);
+                    e.consume();
+                }
+            });
+        }
 
-       annotationNodes.put(ann.hashCode(), nodes);
+        annotationNodes.put(ann.hashCode(), nodes);
        
-       System.out.println("put hashCode: " + ann.hashCode() + " ann: " + ann);
+        System.out.println("put hashCode: " + ann.hashCode() + " ann: " + ann);
         annotationNodes.put(ann.hashCode(), nodes);
     }
 
@@ -446,12 +461,93 @@ public class MapasViewController implements Initializable {
     private ContextMenu activeContextMenu;
 
     private void setupMapClickHandler() {
-        // Limpiar preview si había uno pendiente
         if (previewNode != null) {
             mapPane.getChildren().remove(previewNode);
             previewNode = null;
         }
-        mapPane.setOnMouseMoved(null);
+
+        // Hover sobre la ruta en el mapa
+        mapPane.setOnMouseMoved(e -> {
+            List<TrackPoint> points = currentActivity.getTrackPoints();
+            if (points.isEmpty() || projection == null) return;
+
+            double mouseX = e.getX();
+            double mouseY = e.getY();
+
+            // Buscar el TrackPoint más cercano en píxeles
+            double minDist = Double.MAX_VALUE;
+            TrackPoint closest = null;
+            double closestKm = 0;
+            TrackPoint prevPoint = null;
+            double dist = 0;
+
+            for (TrackPoint tp : points) {
+                if (prevPoint != null) dist += prevPoint.distanceTo(tp);
+                prevPoint = tp;
+
+                Point2D pt = projection.project(tp);
+                double d = Math.sqrt(
+                    Math.pow(pt.getX() - mouseX, 2) +
+                    Math.pow(pt.getY() - mouseY, 2)
+                );
+                if (d < minDist) {
+                    minDist = d;
+                    closest = tp;
+                    closestKm = dist / 1000.0;
+                }
+            }
+
+            // Solo actuar si el ratón está cerca de la ruta (umbral en píxeles)
+            final double THRESHOLD = 60.0;
+            if (minDist > THRESHOLD) {
+                if (highlightCircle != null) {
+                    mapPane.getChildren().remove(highlightCircle);
+                    highlightCircle = null;
+                }
+                if (chartHighlightCircle != null) {
+                    chartHighlightCircle.setVisible(false);
+                }
+                return;
+            }
+
+            // Punto amarillo en el mapa
+            if (highlightCircle != null) mapPane.getChildren().remove(highlightCircle);
+            Point2D pt = projection.project(closest);
+            highlightCircle = new Circle(pt.getX(), pt.getY(), 5, Color.YELLOW);
+            highlightCircle.setStroke(Color.BLACK);
+            mapPane.getChildren().add(highlightCircle);
+
+            // Punto amarillo en el gráfico
+            if (chartHighlightCircle == null) {
+                chartHighlightCircle = new Circle(6, Color.YELLOW);
+                chartHighlightCircle.setStroke(Color.BLACK);
+                chartHighlightCircle.setStrokeWidth(1.5);
+                chartHighlightCircle.setMouseTransparent(true);
+            }
+
+            final TrackPoint finalClosest = closest;
+            final double finalKm = closestKm;
+            final double screenX = xAxis.localToScene(xAxis.getDisplayPosition(finalKm), 0).getX();
+            final double screenY = ((NumberAxis) elevationChart.getYAxis())
+                .localToScene(0, ((NumberAxis) elevationChart.getYAxis())
+                .getDisplayPosition(finalClosest.getElevation())).getY();
+
+            javafx.application.Platform.runLater(() -> {
+                javafx.scene.layout.Pane chartPane = (javafx.scene.layout.Pane)
+                    elevationChart.lookup(".chart-plot-background").getParent();
+
+                if (!chartPane.getChildren().contains(chartHighlightCircle)) {
+                    chartPane.getChildren().add(chartHighlightCircle);
+                }
+
+                double localX = chartPane.sceneToLocal(screenX, screenY).getX();
+                double localY = chartPane.sceneToLocal(screenX, screenY).getY();
+
+                chartHighlightCircle.setCenterX(localX);
+                chartHighlightCircle.setCenterY(localY);
+                chartHighlightCircle.setVisible(true);
+            });
+        });
         mapPane.setOnMouseClicked(e -> {
             if (e.getButton() == MouseButton.SECONDARY) {
                 e.consume();
