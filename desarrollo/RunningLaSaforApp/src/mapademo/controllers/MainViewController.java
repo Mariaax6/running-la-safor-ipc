@@ -1,4 +1,3 @@
-
 package mapademo.controllers;
 
 import javafx.application.Platform;
@@ -37,16 +36,26 @@ public class MainViewController {
             Stage stage = (Stage) mainPane.getScene().getWindow();
             stage.setOnCloseRequest(event -> {
                 if (app.getCurrentUser() != null) {
+                    ButtonType cancelarBtn = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+                    ButtonType salirBtn = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
+
                     Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
                     confirm.setTitle("Salir de la aplicación");
-                    confirm.setHeaderText("¿Seguro que quieres salir?");
-                    confirm.setContentText("Se cerrará tu sesión actual y se guardarán los datos.");
-                    ButtonType btnSalir = new ButtonType("Salir", ButtonBar.ButtonData.OK_DONE);
-                    ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-                    confirm.getButtonTypes().setAll(btnSalir, btnCancelar);
+                    confirm.setHeaderText(null);
+                    confirm.setContentText("¿Seguro que quieres salir? Se cerrará tu sesión actual y se guardarán los datos.");
+                    confirm.getButtonTypes().setAll(cancelarBtn, salirBtn);
                     confirm.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+
+                    confirm.setOnShown(e -> {
+                        Button cancelar = (Button) confirm.getDialogPane().lookupButton(cancelarBtn);
+                        Button salir = (Button) confirm.getDialogPane().lookupButton(salirBtn);
+                        salir.setDefaultButton(false);
+                        cancelar.setDefaultButton(true);
+                        cancelar.requestFocus();
+                    });
+
                     Optional<ButtonType> result = confirm.showAndWait();
-                    if (result.isPresent() && result.get() == btnSalir) {
+                    if (result.isPresent() && result.get() == salirBtn) {
                         app.logout();
                         stage.close();
                     } else {
@@ -75,47 +84,57 @@ public class MainViewController {
                     avatarView.setImage(new Image(avatarFile.toURI().toString()));
                 }
             } else {
-                // Imagen por defecto (puedes usar un recurso)
                 try {
                     avatarView.setImage(new Image(getClass().getResourceAsStream("/resources/default_avatar.png")));
-                } catch (Exception e) {
-                    // Si no existe, no pasa nada
-                }
+                } catch (Exception ignored) {}
             }
 
             HBox hbox = new HBox(8);
             hbox.setAlignment(javafx.geometry.Pos.CENTER);
             hbox.getChildren().addAll(avatarView, nameLabel);
             userMenuButton.setGraphic(hbox);
-            userMenuButton.setText(null); // Ocultar texto del botón
+            userMenuButton.setText(null);
+            userMenuButton.getItems().clear();
+
+            MenuItem perfil = new MenuItem("Perfil");
+            perfil.setOnAction(e -> showProfile());
+            MenuItem cerrarSesion = new MenuItem("Cerrar sesión");
+            cerrarSesion.setOnAction(e -> confirmLogout());
+
+            userMenuButton.getItems().addAll(perfil, new SeparatorMenuItem(), cerrarSesion);
         }
     }
-
+    
     @FXML
     private void confirmLogout() {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Cerrar sesión");
-        confirm.setHeaderText("¿Estás seguro de que deseas cerrar sesión?");
-        confirm.setContentText("Se guardarán los datos de la sesión actual.");
-        ButtonType btnAceptar = new ButtonType("Aceptar", ButtonBar.ButtonData.OK_DONE);
-        ButtonType btnCancelar = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
-        confirm.getButtonTypes().setAll(btnAceptar, btnCancelar);
-        confirm.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == btnAceptar) {
+        ButtonType cancelarBtn = new ButtonType("Cancelar", ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cerrarBtn = new ButtonType("Cerrar sesión", ButtonBar.ButtonData.OK_DONE);
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Cerrar sesión");
+        alert.setHeaderText(null);
+        alert.setContentText("¿Seguro que quieres cerrar sesión?");
+        alert.getButtonTypes().setAll(cancelarBtn, cerrarBtn);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
+
+        alert.setOnShown(e -> {
+            Button cancelar = (Button) alert.getDialogPane().lookupButton(cancelarBtn);
+            Button cerrar = (Button) alert.getDialogPane().lookupButton(cerrarBtn);
+            cerrar.setDefaultButton(false);
+            cancelar.setDefaultButton(true);
+            cancelar.requestFocus();
+        });
+
+        if (alert.showAndWait().get() == cerrarBtn) {
             app.logout();
             cambiarEscena("/mapademo/fxml/LoginView.fxml", "Running la Safor - Inicio de sesión");
         }
     }
 
-    @FXML
-   private void showActivities()   { loadView("/mapademo/fxml/ActividadesView.fxml"); }
-    @FXML
-    private void showProfile()      { loadView("/mapademo/fxml/PerfilView.fxml"); }
-    @FXML
-    private void showHistory()      { loadView("/mapademo/fxml/HistorialView.fxml"); }
-    @FXML
-    private void showMapManagement(){ loadView("/mapademo/fxml/MapManagement.fxml"); }
+    @FXML private void showActivities() { loadView("/mapademo/fxml/ActividadesView.fxml"); }
+    @FXML private void showProfile() { loadView("/mapademo/fxml/PerfilView.fxml"); }
+    @FXML private void showHistory() { loadView("/mapademo/fxml/HistorialView.fxml"); }
+    @FXML private void showMapManagement() { loadView("/mapademo/fxml/MapManagement.fxml"); }
 
     @FXML
     private void importActivity() {
