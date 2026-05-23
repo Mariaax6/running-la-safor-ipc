@@ -94,24 +94,24 @@ public class ActividadesViewController {
         }
     }
 
-    @FXML
+   @FXML
 private void showMonthlyStats() {
     List<Activity> activities = app.getUserActivities();
     LocalDate now = LocalDate.now();
     double totalDist = 0, totalGain = 0, totalLoss = 0;
     long totalSeconds = 0;
     int count = 0;
+
     for (Activity a : activities) {
-        if (a.getStartTime() != null) {
-            LocalDateTime startTime = a.getStartTime();
-            LocalDate date = startTime.toLocalDate();
-            if (date.getMonth() == now.getMonth() && date.getYear() == now.getYear()) {
-                totalDist += a.getTotalDistance();
-                totalSeconds += a.getDuration().getSeconds();
-                totalGain += a.getElevationGain();
-                totalLoss += a.getElevationLoss();
-                count++;
-            }
+        // Si no tiene fecha de inicio, usamos la fecha de hoy
+        LocalDate date = (a.getStartTime() != null) ? a.getStartTime().toLocalDate() : now;
+
+        if (date.getMonth() == now.getMonth() && date.getYear() == now.getYear()) {
+            totalDist += a.getTotalDistance();
+            totalSeconds += a.getDuration().getSeconds();
+            totalGain += a.getElevationGain();
+            totalLoss += a.getElevationLoss();
+            count++;
         }
     }
 
@@ -127,7 +127,6 @@ private void showMonthlyStats() {
                 count, totalDist/1000.0, hours, minutes, totalGain, totalLoss));
     }
 }
-
     private void mostrarAlerta(String titulo, String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(titulo);
