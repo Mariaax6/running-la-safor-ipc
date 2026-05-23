@@ -1,4 +1,3 @@
-
 package mapademo.controllers;
 
 import upv.ipc.sportlib.SportActivityApp;
@@ -10,9 +9,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+
 import java.time.Duration;
 import java.util.List;
 import upv.ipc.sportlib.Session;
+
+import java.time.Duration;
+import java.util.List;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import upv.ipc.sportlib.Session;
+import upv.ipc.sportlib.SportActivityApp;
+import upv.ipc.sportlib.User;
 
 public class HistorialViewController {
 
@@ -28,10 +41,7 @@ public class HistorialViewController {
         User user = app.getCurrentUser();
         if (user == null) return;
 
-        // SE DESPLAZA AQUÍ: Fuerza al TableView a ajustar las columnas de forma dinámica
-        sessionTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-
-        // Configurar fábricas de celdas
+        // Configurar columnas
         colStart.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getStartTime().toString()));
         colEnd.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getEndTime() != null ?
                 data.getValue().getEndTime().toString() : ""));
@@ -46,7 +56,6 @@ public class HistorialViewController {
         colViewed.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getViewedActivities()));
         colAnnotations.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getAnnotationsCreated()));
 
-        // Cargar datos
         List<Session> sessions = app.getSessionsByUser(user);
         sessionTable.setItems(FXCollections.observableArrayList(sessions));
 
