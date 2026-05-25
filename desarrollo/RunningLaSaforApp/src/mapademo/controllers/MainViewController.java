@@ -21,6 +21,8 @@ import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class MainViewController {
 
     @FXML private BorderPane mainPane;

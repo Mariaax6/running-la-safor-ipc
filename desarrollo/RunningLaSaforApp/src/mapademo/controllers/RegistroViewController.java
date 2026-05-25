@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class RegistroViewController {
 
     @FXML private TextField nickField;

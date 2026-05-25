@@ -27,6 +27,8 @@ import upv.ipc.sportlib.Session;
 import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class HistorialViewController {
 
     @FXML private TableView<Session> sessionTable;

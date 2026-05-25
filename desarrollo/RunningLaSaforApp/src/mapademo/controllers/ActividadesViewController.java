@@ -15,6 +15,7 @@ import java.util.Optional;
 import upv.ipc.sportlib.Activity;
 import upv.ipc.sportlib.SportActivityApp;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
 public class ActividadesViewController {
 
     @FXML private ListView<Activity> activityListView;

@@ -9,6 +9,8 @@ import upv.ipc.sportlib.SportActivityApp;
 import upv.ipc.sportlib.User;
 import java.io.IOException;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class LoginViewController {
 
     @FXML private TextField nickField;
