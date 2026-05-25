@@ -11,6 +11,8 @@ import java.util.Optional;
 import javafx.scene.layout.VBox;
 import upv.ipc.sportlib.MapRegion;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class MapManagementController {
 
     @FXML private ListView<MapRegion> allMapsList;

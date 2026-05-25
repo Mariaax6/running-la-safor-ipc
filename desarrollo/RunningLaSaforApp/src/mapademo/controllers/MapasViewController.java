@@ -43,6 +43,8 @@ import upv.ipc.sportlib.MapProjection;
 import upv.ipc.sportlib.MapRegion;
 import upv.ipc.sportlib.TrackPoint;
 
+//hemos usado la IA para corregir el codigo y asegurarnos que esta bien
+
 public class MapasViewController implements Initializable {
 
     @FXML private ScrollPane map_scrollpane;
