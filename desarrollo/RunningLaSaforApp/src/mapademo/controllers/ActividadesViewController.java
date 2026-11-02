@@ -68,7 +68,7 @@ public class ActividadesViewController {
             BorderPane mainPane = (BorderPane) activityListView.getScene().getRoot();
             mainPane.setCenter(view);
         } catch (IOException e) {
-            e.printStackTrace();
+            mostrarAlerta("Error", "No se pudo abrir la actividad en el mapa.\n" + e.getMessage());
         }
     }
 

@@ -30,7 +30,7 @@
                   spacing="16.0"
                   style="-fx-padding: 25 40 25 40;"
                   styleClass="card-white"
-                  stylesheets="@/resources/estilos.css">
+                  stylesheets="@../../resources/estilos.css">
 
                 <Label text="Modificar perfil"
                        style="-fx-font-size: 22px; -fx-font-weight: bold;" />

@@ -6,7 +6,7 @@
 <VBox spacing="16.0" xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="mapademo.controllers.HistorialViewController"
-      stylesheets="@../resources/estilos.css">
+      stylesheets="@../../resources/estilos.css">
     <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0"/></padding>
     
     <Label text="Historial de sesiones" styleClass="title"/>

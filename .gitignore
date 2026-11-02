@@ -1,2 +1,11 @@
-/desarrollo/RunningLaSaforApp/build/
-/desarrollo/RunningLaSaforApp/dist/
+desarrollo/RunningLaSaforApp/build/
+desarrollo/RunningLaSaforApp/dist/
+
+# Datos locales de NetBeans (rutas de cada ordenador)
+desarrollo/RunningLaSaforApp/nbproject/private/
+
+# Base de datos local: contiene usuarios y contraseñas, nunca se sube
+*.db
+
+.DS_Store
+Thumbs.db

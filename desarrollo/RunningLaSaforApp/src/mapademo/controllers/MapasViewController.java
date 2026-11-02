@@ -261,11 +261,9 @@ public class MapasViewController implements Initializable {
 
     private void drawRoute() {
         if (currentActivity == null || projection == null) {
-            System.out.println("drawRoute: abortado. activity=" + currentActivity + " projection=" + projection);
             return;
         }
         List<TrackPoint> points = currentActivity.getTrackPoints();
-        System.out.println("drawRoute: " + points.size() + " puntos");
         if (points.size() < 2) return;
 
         // Dibujar segmentos coloreados por velocidad
@@ -399,9 +397,6 @@ public class MapasViewController implements Initializable {
             });
         }
 
-        annotationNodes.put(ann.hashCode(), nodes);
-       
-        System.out.println("put hashCode: " + ann.hashCode() + " ann: " + ann);
         annotationNodes.put(ann.hashCode(), nodes);
     }
 
@@ -815,8 +810,6 @@ public class MapasViewController implements Initializable {
     }
 
     private void blinkAnnotation(Annotation ann) {
-        System.out.println("blink hashCode: " + ann.hashCode());
-        System.out.println("claves en annotationNodes: " + annotationNodes.keySet());
         List<javafx.scene.Node> nodes = annotationNodes.get(ann.hashCode());
         if (nodes != null) {
             nodes.forEach(n -> {
@@ -833,9 +826,7 @@ public class MapasViewController implements Initializable {
 
     @FXML
     private void editar(ActionEvent event) {
-        System.out.println("editar llamado");
         Annotation selected = annotationList.getSelectionModel().getSelectedItem();
-        System.out.println("selected: " + selected);
         if (selected == null) return;
 
         Dialog<Void> dialog = new Dialog<>();

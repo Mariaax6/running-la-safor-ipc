@@ -209,11 +209,12 @@ public class PerfilViewController {
     private void goBack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/mapademo/fxml/MainView.fxml"));
-            Scene scene = new Scene(loader.load());
+            Scene scene = new Scene(loader.load(), mapademo.MainApp.APP_WIDTH, mapademo.MainApp.APP_HEIGHT);
+            scene.getStylesheets().add(getClass().getResource("/resources/estilos.css").toExternalForm());
             Stage stage = (Stage) nickField.getScene().getWindow();
             stage.setScene(scene);
         } catch (IOException e) {
-            e.printStackTrace();
+            showAlert("Error", "No se pudo volver a la pantalla principal.\n" + e.getMessage());
         }
     }
 

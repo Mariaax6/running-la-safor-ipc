@@ -210,7 +210,6 @@ public class RegistroViewController {
             Stage stage = (Stage) nickField.getScene().getWindow();
             stage.setScene(scene);
         } catch (IOException e) {
-            e.printStackTrace();
             showAlert("Error", "No se pudo volver a la pantalla de inicio.");
         }
     }

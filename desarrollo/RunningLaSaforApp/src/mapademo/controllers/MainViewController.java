@@ -184,7 +184,7 @@ public class MainViewController {
             stage.setScene(scene);
             stage.setTitle(titulo);
         } catch (IOException e) {
-            e.printStackTrace();
+            mostrarError("Error al cargar vista", "No se pudo cargar: " + fxml + "\n" + e.getMessage());
         }
     }
 
